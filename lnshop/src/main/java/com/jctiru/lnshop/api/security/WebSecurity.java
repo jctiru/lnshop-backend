@@ -18,6 +18,12 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private UserDetailsService userDetailsService;
 
+	@Autowired
+	private CustomAuthenticationFilter customAuthenticationFilter;
+
+	@Autowired
+	private CustomAuthorizationFilter customAuthorizationFilter;
+
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable()
@@ -27,28 +33,21 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 				.anyRequest()
 				.authenticated()
 				.and()
-				.addFilter(getAuthenticationFilter())
-				.addFilter(new CustomAuthorizationFilter(authenticationManager()))
+				.addFilter(customAuthenticationFilter)
+				.addFilter(customAuthorizationFilter)
 				.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 
-//	@Override
-//	//@Bean
-//	public AuthenticationManager authenticationManagerBean() throws Exception {
-//	    return super.authenticationManagerBean();
-//	}
+	@Override
+	@Bean
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		return super.authenticationManagerBean();
+	}
 
 	@Override
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
-	}
-
-	public CustomAuthenticationFilter getAuthenticationFilter() throws Exception {
-		CustomAuthenticationFilter filter = new CustomAuthenticationFilter(authenticationManager());
-		filter.setFilterProcessesUrl("/users/login");
-
-		return filter;
 	}
 
 }

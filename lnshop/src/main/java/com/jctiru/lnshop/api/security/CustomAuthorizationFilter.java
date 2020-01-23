@@ -8,15 +8,26 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.stereotype.Component;
+
+import com.jctiru.lnshop.api.AppPropertiesFile;
 
 import io.jsonwebtoken.Jwts;
 
+@Component
 public class CustomAuthorizationFilter extends BasicAuthenticationFilter {
-	public CustomAuthorizationFilter(AuthenticationManager authenticationManager) {
+
+	@Autowired
+	AppPropertiesFile appProperties;
+
+	@Autowired
+	public CustomAuthorizationFilter(@Lazy AuthenticationManager authenticationManager) {
 		super(authenticationManager);
 	}
 
@@ -42,7 +53,7 @@ public class CustomAuthorizationFilter extends BasicAuthenticationFilter {
 			token = token.replace(SecurityConstants.TOKEN_PREFIX, "");
 
 			String user = Jwts.parser()
-					.setSigningKey(SecurityConstants.getTokenSecret())
+					.setSigningKey(appProperties.getTokenSecret())
 					.parseClaimsJws(token)
 					.getBody()
 					.getSubject();

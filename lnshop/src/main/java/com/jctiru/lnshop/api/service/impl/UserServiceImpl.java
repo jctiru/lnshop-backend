@@ -61,8 +61,13 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDto getUser(String email) {
-		// TODO Auto-generated method stub
-		return null;
+		UserEntity userEntity = userRepository.findUserByEmail(email);
+
+		if (userEntity == null) {
+			throw new UsernameNotFoundException(email);
+		}
+
+		return modelMapper.map(userEntity, UserDto.class);
 	}
 
 	@Override

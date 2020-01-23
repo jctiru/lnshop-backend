@@ -36,18 +36,18 @@ public class AppExceptionsHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(RecordNotFoundException.class)
 	public ResponseEntity<Object> handleRecordNotFound(RecordNotFoundException ex, WebRequest request) {
-		ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST, LocalDateTime.now(), ex.getMessage(),
-				ex.getMessage());
-
-		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-	}
-
-	@ExceptionHandler(Exception.class)
-	public ResponseEntity<Object> handleOtherExceptions(Exception ex, WebRequest request) {
 		ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND, LocalDateTime.now(), ex.getMessage(),
 				ex.getMessage());
 
 		return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+	}
+
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<Object> handleOtherExceptions(Exception ex, WebRequest request) {
+		ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST, LocalDateTime.now(), ex.getMessage(),
+				ex.getMessage());
+
+		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 
 }
