@@ -1,10 +1,16 @@
 package com.jctiru.lnshop.api.service.impl;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,7 +18,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.jctiru.lnshop.api.exception.RecordNotFoundException;
+import com.jctiru.lnshop.api.io.entity.RoleEntity;
 import com.jctiru.lnshop.api.io.entity.UserEntity;
+import com.jctiru.lnshop.api.io.repository.RoleRepository;
 import com.jctiru.lnshop.api.io.repository.UserRepository;
 import com.jctiru.lnshop.api.service.UserService;
 import com.jctiru.lnshop.api.shared.Utils;
@@ -25,11 +33,15 @@ public class UserServiceImpl implements UserService {
 	UserRepository userRepository;
 
 	@Autowired
+	RoleRepository roleRepository;
+
+	@Autowired
 	Utils utils;
 
 	@Autowired
 	ModelMapper modelMapper;
 
+	@Transactional
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		UserEntity userEntity = userRepository.findUserByEmail(email);
@@ -37,7 +49,10 @@ public class UserServiceImpl implements UserService {
 			throw new UsernameNotFoundException(email);
 		}
 
-		return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
+		List<GrantedAuthority> authorities = userEntity.getRoles().stream()
+				.map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+
+		return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), authorities);
 	}
 
 	@Override
@@ -53,6 +68,8 @@ public class UserServiceImpl implements UserService {
 
 		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 		userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+
+		userEntity.setRoles(new HashSet<RoleEntity>(Arrays.asList(roleRepository.findRoleByName("USER"))));
 
 		UserEntity storedUserDetails = userRepository.save(userEntity);
 

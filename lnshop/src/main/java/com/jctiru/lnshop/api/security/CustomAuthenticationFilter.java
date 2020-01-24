@@ -3,6 +3,8 @@ package com.jctiru.lnshop.api.security;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.FilterChain;
@@ -15,6 +17,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
@@ -66,14 +69,21 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 	@Override
 	protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain,
 			Authentication auth) throws IOException, ServletException {
-		String userName = ((User) auth.getPrincipal()).getUsername();
+		User user = (User) auth.getPrincipal();
+
+		List<String> authorityList = user.getAuthorities()
+				.stream()
+				.map(GrantedAuthority::getAuthority)
+				.collect(Collectors.toList());
+
 		String token = Jwts.builder()
-				.setSubject(userName)
+				.claim(SecurityConstants.TOKEN_CLAIMS, authorityList)
+				.setSubject(user.getUsername())
 				.setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
 				.signWith(SignatureAlgorithm.HS512, appProperties.getTokenSecret())
 				.compact();
 
-		UserDto userDto = userService.getUser(userName);
+		UserDto userDto = userService.getUser(user.getUsername());
 
 		res.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
 		res.addHeader("User ID", userDto.getUserId());

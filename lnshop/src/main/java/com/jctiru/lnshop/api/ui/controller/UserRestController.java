@@ -1,9 +1,14 @@
 package com.jctiru.lnshop.api.ui.controller;
 
+import java.util.Collections;
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +35,13 @@ public class UserRestController {
 		UserDto createdUser = userService.createUser(userDto);
 
 		return modelMapper.map(createdUser, UserRest.class);
+	}
+
+	//@PreAuthorize("hasAuthority('USER')")
+	@PreAuthorize("isAuthenticated()")
+	@GetMapping(value = "/user-path")
+	public Map<String, String> getString() {
+		return Collections.singletonMap("response", "Hello User");
 	}
 
 }

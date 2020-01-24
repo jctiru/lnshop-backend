@@ -1,12 +1,17 @@
 package com.jctiru.lnshop.api.io.entity;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -48,6 +53,10 @@ public class UserEntity {
 	@UpdateTimestamp
 	@Column(name = "update_date_time", nullable = false)
 	private LocalDateTime updateDateTime;
+
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
+	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+	private Set<RoleEntity> roles;
 
 	public long getId() {
 		return id;
@@ -127,6 +136,14 @@ public class UserEntity {
 
 	public void setUpdateDateTime(LocalDateTime updateDateTime) {
 		this.updateDateTime = updateDateTime;
+	}
+
+	public Set<RoleEntity> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<RoleEntity> roles) {
+		this.roles = roles;
 	}
 
 }
