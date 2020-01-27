@@ -8,19 +8,29 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Utils {
-	
+
+	public enum EntityType {
+		USER,
+		LIGHTNOVEL,
+		GENRE
+	}
+
 	private final Random random = new SecureRandom();
 	private static final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	private static final String LOWER = UPPER.toLowerCase(Locale.ROOT);
 	private static final String DIGITS = "0123456789";
 	private static final String ALPHANUM = UPPER + LOWER + DIGITS;
 
-	public String generateUserId(int length) {
-		return generateRandomString(length);
-	}
-
-	public String generateAddressId(int length) {
-		return generateRandomString(length);
+	public String generatePublicEntityId(EntityType entityType) {
+		switch (entityType) {
+		case USER:
+		case LIGHTNOVEL:
+			return generateRandomString(50);
+		case GENRE:
+			return generateRandomString(10);
+		default:
+			return null;
+		}
 	}
 
 	private String generateRandomString(int length) {
