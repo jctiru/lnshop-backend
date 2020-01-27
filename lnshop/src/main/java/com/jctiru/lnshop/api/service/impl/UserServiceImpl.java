@@ -17,7 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.jctiru.lnshop.api.exception.RecordNotFoundException;
+import com.jctiru.lnshop.api.exception.RecordAlreadyExistsException;
 import com.jctiru.lnshop.api.io.entity.RoleEntity;
 import com.jctiru.lnshop.api.io.entity.UserEntity;
 import com.jctiru.lnshop.api.io.repository.RoleRepository;
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDto createUser(UserDto user) {
 		if (userRepository.findUserByEmail(user.getEmail()) != null) {
-			throw new RecordNotFoundException("Record already exists");
+			throw new RecordAlreadyExistsException("Record already exists");
 		}
 
 		UserEntity userEntity = modelMapper.map(user, UserEntity.class);

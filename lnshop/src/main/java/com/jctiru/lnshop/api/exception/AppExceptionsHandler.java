@@ -42,6 +42,14 @@ public class AppExceptionsHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
 	}
 
+	@ExceptionHandler(RecordAlreadyExistsException.class)
+	public ResponseEntity<Object> handleRecordAlreadyExists(RecordAlreadyExistsException ex, WebRequest request) {
+		ErrorResponse error = new ErrorResponse(HttpStatus.CONFLICT, LocalDateTime.now(), ex.getMessage(),
+				ex.getMessage());
+
+		return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+	}
+
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<Object> handleOtherExceptions(Exception ex, WebRequest request) {
 		ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST, LocalDateTime.now(), ex.getMessage(),
