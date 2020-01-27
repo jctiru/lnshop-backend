@@ -15,6 +15,9 @@ public class GenreEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
+	@Column(name = "genre_id", nullable = false)
+	private String genreId;
+
 	@Column(name = "name", nullable = false, length = 20)
 	private String name;
 
@@ -24,6 +27,14 @@ public class GenreEntity {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public String getGenreId() {
+		return genreId;
+	}
+
+	public void setGenreId(String genreId) {
+		this.genreId = genreId;
 	}
 
 	public String getName() {
