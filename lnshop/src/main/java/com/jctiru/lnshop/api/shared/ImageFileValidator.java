@@ -9,11 +9,17 @@ public class ImageFileValidator implements ConstraintValidator<ValidImage, Multi
 
 	@Override
 	public boolean isValid(MultipartFile multipartFile, ConstraintValidatorContext context) {
+		if (multipartFile != null) {
+			if (multipartFile.isEmpty()) {
+				context.disableDefaultConstraintViolation();
+				context.buildConstraintViolationWithTemplate("File has no content.")
+						.addConstraintViolation();
+				return false;
+			}
 
-		String contentType = multipartFile.getContentType();
-		long maxFileSize = 350000; // 350KB
+			String contentType = multipartFile.getContentType();
+			long maxFileSize = 350000; // 350KB
 
-		if (!multipartFile.isEmpty()) {
 			if (!isSupportedContentType(contentType)) {
 				context.disableDefaultConstraintViolation();
 				context.buildConstraintViolationWithTemplate("Only PNG or JPG images are allowed.")
