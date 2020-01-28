@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.jctiru.lnshop.api.io.entity.GenreEntity;
 import com.jctiru.lnshop.api.io.repository.GenreRepository;
+import com.jctiru.lnshop.api.shared.Utils;
 
 @Component
 @ConditionalOnProperty(name = "app.db-role-init", havingValue = "true")
@@ -19,6 +20,9 @@ public class DbGenreInitializer implements CommandLineRunner {
 
 	@Autowired
 	GenreRepository genreRepository;
+
+	@Autowired
+	Utils utils;
 
 	Logger logger = LoggerFactory.getLogger(DbGenreInitializer.class);
 
@@ -44,6 +48,7 @@ public class DbGenreInitializer implements CommandLineRunner {
 		for (String genre : genreList) {
 			if (!genreRepository.existsGenreByName(genre)) {
 				GenreEntity genreEntity = new GenreEntity();
+				genreEntity.setGenreId(utils.generatePublicEntityId(Utils.EntityType.GENRE));
 				genreEntity.setName(genre);
 				genreRepository.save(genreEntity);
 				logger.info("{} genre not found in DB Genres and has been created...", genre);
