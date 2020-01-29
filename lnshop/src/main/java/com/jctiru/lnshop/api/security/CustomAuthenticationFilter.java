@@ -19,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 
@@ -49,6 +50,13 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 	@Autowired
 	public void setAuthenticationManager(AuthenticationManager authenticationManager) {
 		super.setAuthenticationManager(authenticationManager);
+
+	}
+
+	@Override
+	@Autowired
+	public void setAuthenticationFailureHandler(AuthenticationFailureHandler failureHandler) {
+		super.setAuthenticationFailureHandler(failureHandler);
 	}
 
 	@Override
