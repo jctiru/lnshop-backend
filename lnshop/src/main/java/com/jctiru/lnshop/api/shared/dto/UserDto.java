@@ -1,6 +1,9 @@
 package com.jctiru.lnshop.api.shared.dto;
 
 import java.time.LocalDateTime;
+import java.util.Set;
+
+import com.jctiru.lnshop.api.io.entity.RoleEntity;
 
 public class UserDto {
 
@@ -15,6 +18,7 @@ public class UserDto {
 	private boolean emailVerificationStatus = false;
 	private LocalDateTime createDateTime;
 	private LocalDateTime updateDateTime;
+	private Set<RoleEntity> roles;
 
 	public long getId() {
 		return id;
@@ -102,6 +106,14 @@ public class UserDto {
 
 	public void setUpdateDateTime(LocalDateTime updateDateTime) {
 		this.updateDateTime = updateDateTime;
+	}
+
+	public Set<RoleEntity> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<RoleEntity> roles) {
+		this.roles = roles;
 	}
 
 }

@@ -76,6 +76,7 @@ public class UserServiceImpl implements UserService {
 		return modelMapper.map(storedUserDetails, UserDto.class);
 	}
 
+	@Transactional
 	@Override
 	public UserDto getUser(String email) {
 		UserEntity userEntity = userRepository.findUserByEmail(email);

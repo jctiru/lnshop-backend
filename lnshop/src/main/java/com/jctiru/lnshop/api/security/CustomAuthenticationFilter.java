@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jctiru.lnshop.api.AppPropertiesFile;
+import com.jctiru.lnshop.api.io.entity.RoleEntity;
 import com.jctiru.lnshop.api.service.UserService;
 import com.jctiru.lnshop.api.shared.dto.UserDto;
 import com.jctiru.lnshop.api.ui.model.request.UserLoginRequestModel;
@@ -93,8 +95,20 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
 		UserDto userDto = userService.getUser(user.getUsername());
 
+		res.setContentType("application/json");
 		res.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
-		res.addHeader("User ID", userDto.getUserId());
+		res.getWriter().append(jsonResponse(token, userDto.getUserId(), userDto.getRoles(),
+				userDto.getFirstName(), userDto.getLastName()));
+	}
+
+	private String jsonResponse(String token, String userId, Set<RoleEntity> roles, String firstName, String lastName) {
+		String role = roles.iterator().next().getName();
+
+		return "{\"token\": \"" + token + "\", "
+				+ "\"userId\": \"" + userId + "\", "
+				+ "\"role\": \"" + role + "\", "
+				+ "\"firstName\": \"" + firstName + "\", "
+				+ "\"lastName\": \"" + lastName + "\"}";
 	}
 
 }
