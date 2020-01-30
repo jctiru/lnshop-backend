@@ -3,6 +3,7 @@ package com.jctiru.lnshop.api.ui.model.response;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 
@@ -11,20 +12,20 @@ public class ErrorResponse {
 	private HttpStatus status;
 	private LocalDateTime timeStamp;
 	private String message;
-	private List<String> errors;
+	private List<Map<String, String>> errors;
 
 	public ErrorResponse() {
 
 	}
 
-	public ErrorResponse(HttpStatus status, LocalDateTime timeStamp, String message, List<String> errors) {
+	public ErrorResponse(HttpStatus status, LocalDateTime timeStamp, String message, List<Map<String, String>> errors) {
 		this.setStatus(status);
 		this.timeStamp = timeStamp;
 		this.message = message;
 		this.errors = errors;
 	}
 
-	public ErrorResponse(HttpStatus status, LocalDateTime timeStamp, String message, String error) {
+	public ErrorResponse(HttpStatus status, LocalDateTime timeStamp, String message, Map<String, String> error) {
 		this.setStatus(status);
 		this.timeStamp = timeStamp;
 		this.message = message;
@@ -55,11 +56,11 @@ public class ErrorResponse {
 		this.message = message;
 	}
 
-	public List<String> getErrors() {
+	public List<Map<String, String>> getErrors() {
 		return errors;
 	}
 
-	public void setErrors(List<String> details) {
+	public void setErrors(List<Map<String, String>> details) {
 		this.errors = details;
 	}
 
