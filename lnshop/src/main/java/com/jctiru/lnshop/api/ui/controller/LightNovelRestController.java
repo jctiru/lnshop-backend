@@ -15,9 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jctiru.lnshop.api.service.GenreService;
 import com.jctiru.lnshop.api.service.LightNovelService;
+import com.jctiru.lnshop.api.shared.dto.GenreDto;
 import com.jctiru.lnshop.api.shared.dto.LightNovelDto;
 import com.jctiru.lnshop.api.ui.model.request.LightNovelDetailsRequestModel;
+import com.jctiru.lnshop.api.ui.model.response.GenreRest;
 import com.jctiru.lnshop.api.ui.model.response.LightNovelRest;
 
 @RestController
@@ -26,6 +29,9 @@ public class LightNovelRestController {
 
 	@Autowired
 	LightNovelService lightNovelService;
+
+	@Autowired
+	GenreService genreService;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -50,6 +56,19 @@ public class LightNovelRestController {
 		for (LightNovelDto lightNovelDto : lightNovels) {
 			LightNovelRest lightNovelModel = modelMapper.map(lightNovelDto, LightNovelRest.class);
 			returnValue.add(lightNovelModel);
+		}
+
+		return returnValue;
+	}
+
+	@GetMapping("/genres")
+	public List<GenreRest> getGenres() {
+		List<GenreRest> returnValue = new ArrayList<>();
+		List<GenreDto> genres = genreService.getGenres();
+
+		for (GenreDto genreDto : genres) {
+			GenreRest genreModel = modelMapper.map(genreDto, GenreRest.class);
+			returnValue.add(genreModel);
 		}
 
 		return returnValue;
