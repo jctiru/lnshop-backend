@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +37,7 @@ public class LightNovelRestController {
 	@Autowired
 	ModelMapper modelMapper;
 
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping
 	public LightNovelRest createLightNovel(@Valid @ModelAttribute LightNovelDetailsRequestModel lightNovelDetails) {
 		// Standard Strategy tries to map List<String> genresIdList to long id
