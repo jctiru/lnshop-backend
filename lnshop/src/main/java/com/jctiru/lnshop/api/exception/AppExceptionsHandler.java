@@ -54,7 +54,7 @@ public class AppExceptionsHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(RecordNotFoundException.class)
 	public ResponseEntity<Object> handleRecordNotFound(RecordNotFoundException ex, WebRequest request) {
-		ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND, LocalDateTime.now(), "Record already exists",
+		ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND, LocalDateTime.now(), "Record doesn't exists",
 				Collections.singletonMap("error", ex.getMessage()));
 
 		return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
