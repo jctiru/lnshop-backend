@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.jctiru.lnshop.api.exception.RecordNotFoundException;
@@ -94,14 +95,21 @@ public class LightNovelServiceImpl implements LightNovelService {
 	}
 
 	@Override
-	public List<LightNovelDto> getLightNovels(int page, int limit) {
+	public List<LightNovelDto> getLightNovels(int page, int limit, List<String> genres) {
 		if (page > 0) {
 			page = page - 1;
 		}
 
 		List<LightNovelDto> returnValue = new ArrayList<>();
-		Pageable pageable = PageRequest.of(page, limit);
-		Page<LightNovelEntity> lightNovelsPage = lightNovelRepository.findAll(pageable);
+		Pageable pageable = PageRequest.of(page, limit, Sort.by("createDateTime").descending());
+		Page<LightNovelEntity> lightNovelsPage;
+
+		if (genres.isEmpty()) {
+			lightNovelsPage = lightNovelRepository.findAll(pageable);
+		} else {
+			lightNovelsPage = lightNovelRepository.findAllByGenresName(genres, pageable);
+		}
+
 		List<LightNovelEntity> lightNovels = lightNovelsPage.getContent();
 
 		for (LightNovelEntity lightNovelEntity : lightNovels) {

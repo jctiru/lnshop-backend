@@ -12,6 +12,6 @@ public interface LightNovelService {
 
 	void deleteLightNovel(String lightNovelId);
 
-	List<LightNovelDto> getLightNovels(int page, int limit);
+	List<LightNovelDto> getLightNovels(int page, int limit, List<String> genres);
 
 }
