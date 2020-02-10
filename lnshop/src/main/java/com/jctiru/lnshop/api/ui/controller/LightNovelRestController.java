@@ -21,8 +21,10 @@ import com.jctiru.lnshop.api.service.GenreService;
 import com.jctiru.lnshop.api.service.LightNovelService;
 import com.jctiru.lnshop.api.shared.dto.GenreDto;
 import com.jctiru.lnshop.api.shared.dto.LightNovelDto;
+import com.jctiru.lnshop.api.shared.dto.LightNovelPageDto;
 import com.jctiru.lnshop.api.ui.model.request.LightNovelDetailsRequestModel;
 import com.jctiru.lnshop.api.ui.model.response.GenreRest;
+import com.jctiru.lnshop.api.ui.model.response.LightNovelPageRest;
 import com.jctiru.lnshop.api.ui.model.response.LightNovelRest;
 
 @RestController
@@ -51,18 +53,12 @@ public class LightNovelRestController {
 	}
 
 	@GetMapping
-	public List<LightNovelRest> getLightNovels(@RequestParam(value = "page", defaultValue = "0") int page,
-			@RequestParam(value = "limit", defaultValue = "25") int limit,
+	public LightNovelPageRest getLightNovels(@RequestParam(value = "page", defaultValue = "0") int page,
+			@RequestParam(value = "limit", defaultValue = "8") int limit,
 			@RequestParam(value = "genres", defaultValue = "") List<String> genres) {
-		List<LightNovelRest> returnValue = new ArrayList<>();
-		List<LightNovelDto> lightNovels = lightNovelService.getLightNovels(page, limit, genres);
+		LightNovelPageDto lightNovelPageDto = lightNovelService.getLightNovels(page, limit, genres);
 
-		for (LightNovelDto lightNovelDto : lightNovels) {
-			LightNovelRest lightNovelModel = modelMapper.map(lightNovelDto, LightNovelRest.class);
-			returnValue.add(lightNovelModel);
-		}
-
-		return returnValue;
+		return modelMapper.map(lightNovelPageDto, LightNovelPageRest.class);
 	}
 
 	@GetMapping(path = "/{lightNovelId}")

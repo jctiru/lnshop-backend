@@ -22,6 +22,7 @@ import com.jctiru.lnshop.api.service.AmazonS3ClientService;
 import com.jctiru.lnshop.api.service.LightNovelService;
 import com.jctiru.lnshop.api.shared.Utils;
 import com.jctiru.lnshop.api.shared.dto.LightNovelDto;
+import com.jctiru.lnshop.api.shared.dto.LightNovelPageDto;
 
 @Service
 public class LightNovelServiceImpl implements LightNovelService {
@@ -95,12 +96,11 @@ public class LightNovelServiceImpl implements LightNovelService {
 	}
 
 	@Override
-	public List<LightNovelDto> getLightNovels(int page, int limit, List<String> genres) {
+	public LightNovelPageDto getLightNovels(int page, int limit, List<String> genres) {
 		if (page > 0) {
 			page = page - 1;
 		}
 
-		List<LightNovelDto> returnValue = new ArrayList<>();
 		Pageable pageable = PageRequest.of(page, limit, Sort.by("createDateTime").descending());
 		Page<LightNovelEntity> lightNovelsPage;
 
@@ -111,11 +111,16 @@ public class LightNovelServiceImpl implements LightNovelService {
 		}
 
 		List<LightNovelEntity> lightNovels = lightNovelsPage.getContent();
+		List<LightNovelDto> lightNovelsDto = new ArrayList<>();
 
 		for (LightNovelEntity lightNovelEntity : lightNovels) {
 			LightNovelDto lightNovelDto = modelMapper.map(lightNovelEntity, LightNovelDto.class);
-			returnValue.add(lightNovelDto);
+			lightNovelsDto.add(lightNovelDto);
 		}
+
+		LightNovelPageDto returnValue = new LightNovelPageDto();
+		returnValue.setTotalPages(lightNovelsPage.getTotalPages());
+		returnValue.setLightNovels(lightNovelsDto);
 
 		return returnValue;
 	}

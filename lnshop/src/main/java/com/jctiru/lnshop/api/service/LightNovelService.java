@@ -3,6 +3,7 @@ package com.jctiru.lnshop.api.service;
 import java.util.List;
 
 import com.jctiru.lnshop.api.shared.dto.LightNovelDto;
+import com.jctiru.lnshop.api.shared.dto.LightNovelPageDto;
 
 public interface LightNovelService {
 
@@ -12,6 +13,6 @@ public interface LightNovelService {
 
 	void deleteLightNovel(String lightNovelId);
 
-	List<LightNovelDto> getLightNovels(int page, int limit, List<String> genres);
+	LightNovelPageDto getLightNovels(int page, int limit, List<String> genres);
 
 }
