@@ -96,7 +96,7 @@ public class LightNovelServiceImpl implements LightNovelService {
 	}
 
 	@Override
-	public LightNovelPageDto getLightNovels(int page, int limit, List<String> genres) {
+	public LightNovelPageDto getLightNovels(int page, int limit, List<String> genres, String search) {
 		if (page > 0) {
 			page = page - 1;
 		}
@@ -104,8 +104,10 @@ public class LightNovelServiceImpl implements LightNovelService {
 		Pageable pageable = PageRequest.of(page, limit, Sort.by("createDateTime").descending());
 		Page<LightNovelEntity> lightNovelsPage;
 
-		if (genres.isEmpty()) {
+		if (genres.isEmpty() && search.isBlank()) {
 			lightNovelsPage = lightNovelRepository.findAll(pageable);
+		} else if (genres.isEmpty() && !search.isBlank()) {
+			lightNovelsPage = lightNovelRepository.findAllByTitleContainingIgnoreCase(search, pageable);
 		} else {
 			lightNovelsPage = lightNovelRepository.findAllByGenresName(genres, pageable);
 		}

@@ -55,8 +55,9 @@ public class LightNovelRestController {
 	@GetMapping
 	public LightNovelPageRest getLightNovels(@RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "limit", defaultValue = "8") int limit,
-			@RequestParam(value = "genres", defaultValue = "") List<String> genres) {
-		LightNovelPageDto lightNovelPageDto = lightNovelService.getLightNovels(page, limit, genres);
+			@RequestParam(value = "genres", defaultValue = "") List<String> genres,
+			@RequestParam(value = "search", defaultValue = "") String search) {
+		LightNovelPageDto lightNovelPageDto = lightNovelService.getLightNovels(page, limit, genres, search);
 
 		return modelMapper.map(lightNovelPageDto, LightNovelPageRest.class);
 	}

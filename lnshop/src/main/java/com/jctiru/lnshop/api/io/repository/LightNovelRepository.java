@@ -16,9 +16,9 @@ public interface LightNovelRepository extends JpaRepository<LightNovelEntity, Lo
 
 	LightNovelEntity findByLightNovelId(String lightNovelId);
 
-	// Page<LightNovelEntity> findAllByGenresNameIn(List<String> genres, Pageable pageable);
-
 	@Query("select ln from LightNovelEntity ln join ln.genres g where g.name in :genres group by ln having count(ln) >= (select count(g) from GenreEntity g where g.name in :genres)")
 	Page<LightNovelEntity> findAllByGenresName(@Param("genres") List<String> genres, Pageable page);
+
+	Page<LightNovelEntity> findAllByTitleContainingIgnoreCase(String title, Pageable page);
 
 }

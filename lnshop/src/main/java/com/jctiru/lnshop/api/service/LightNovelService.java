@@ -13,6 +13,6 @@ public interface LightNovelService {
 
 	void deleteLightNovel(String lightNovelId);
 
-	LightNovelPageDto getLightNovels(int page, int limit, List<String> genres);
+	LightNovelPageDto getLightNovels(int page, int limit, List<String> genres, String search);
 
 }
