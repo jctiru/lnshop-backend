@@ -21,4 +21,8 @@ public interface LightNovelRepository extends JpaRepository<LightNovelEntity, Lo
 
 	Page<LightNovelEntity> findAllByTitleContainingIgnoreCase(String title, Pageable page);
 
+	@Query("select ln from LightNovelEntity ln join ln.genres g where g.name in :genres and lower(trim(both from ln.title)) like lower(concat('%', :title, '%')) group by ln having count(ln) >= (select count(g) from GenreEntity g where g.name in :genres)")
+	Page<LightNovelEntity> findAllByGenresAndSearch(@Param("genres") List<String> genres, @Param("title") String title,
+			Pageable page);
+
 }

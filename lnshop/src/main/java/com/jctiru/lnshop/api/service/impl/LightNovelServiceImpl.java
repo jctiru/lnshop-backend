@@ -108,8 +108,10 @@ public class LightNovelServiceImpl implements LightNovelService {
 			lightNovelsPage = lightNovelRepository.findAll(pageable);
 		} else if (genres.isEmpty() && !search.isBlank()) {
 			lightNovelsPage = lightNovelRepository.findAllByTitleContainingIgnoreCase(search, pageable);
-		} else {
+		} else if (!genres.isEmpty() && search.isBlank()) {
 			lightNovelsPage = lightNovelRepository.findAllByGenresName(genres, pageable);
+		} else {
+			lightNovelsPage = lightNovelRepository.findAllByGenresAndSearch(genres, search, pageable);
 		}
 
 		List<LightNovelEntity> lightNovels = lightNovelsPage.getContent();
