@@ -15,4 +15,6 @@ public interface LightNovelService {
 
 	LightNovelPageDto getLightNovels(int page, int limit, List<String> genres, String search);
 
+	LightNovelDto updateLightNovel(String lightNovelId, LightNovelDto lightNovel);
+
 }

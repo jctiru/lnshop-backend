@@ -74,6 +74,48 @@ public class LightNovelServiceImpl implements LightNovelService {
 	}
 
 	@Override
+	public LightNovelDto updateLightNovel(String lightNovelId, LightNovelDto lightNovel) {
+		LightNovelEntity lightNovelEntity = lightNovelRepository.findByLightNovelId(lightNovelId);
+
+		if (lightNovelEntity == null) {
+			throw new RecordNotFoundException(lightNovelId + " not found.");
+		}
+
+		Set<GenreEntity> genres = new HashSet<>();
+
+		for (String genreId : lightNovel.getGenresIdList()) {
+			GenreEntity genreEntity = genreRepository.findByGenreId(genreId);
+
+			if (genreEntity == null) {
+				throw new RecordNotFoundException(genreId + " not found.");
+			}
+
+			genres.add(genreEntity);
+		}
+
+		lightNovelEntity.setGenres(genres);
+		lightNovelEntity.setTitle(lightNovel.getTitle());
+		lightNovelEntity.setDescription(lightNovel.getDescription());
+		lightNovelEntity.setPrice(lightNovel.getPrice());
+		lightNovelEntity.setQuantity(lightNovel.getQuantity());
+
+		if (lightNovel.getImage() != null) {
+			if (lightNovelEntity.getImageUrl() != null) {
+				String fileName = amazonS3ClientService.getFileNameFromImageUrl(lightNovelEntity.getImageUrl());
+				amazonS3ClientService.deleteFileFromS3Bucket(fileName);
+			}
+
+			String imageUrl = amazonS3ClientService.uploadFileToS3Bucket(lightNovel.getImage(),
+					lightNovelEntity.getLightNovelId());
+			lightNovelEntity.setImageUrl(imageUrl);
+		}
+
+		LightNovelEntity updatedLightNovel = lightNovelRepository.save(lightNovelEntity);
+
+		return modelMapper.map(updatedLightNovel, LightNovelDto.class);
+	}
+
+	@Override
 	public LightNovelDto getLightNovelByLightNovelId(String lightNovelId) {
 		LightNovelEntity lightNovelEntity = lightNovelRepository.findByLightNovelId(lightNovelId);
 

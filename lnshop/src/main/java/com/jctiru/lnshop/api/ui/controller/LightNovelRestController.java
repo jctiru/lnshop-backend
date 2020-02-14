@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,6 +51,19 @@ public class LightNovelRestController {
 		LightNovelDto createdLightNovel = lightNovelService.createLightNovel(lightNovelDto);
 
 		return modelMapper.map(createdLightNovel, LightNovelRest.class);
+	}
+
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@PutMapping(path = "/{lightNovelId}")
+	public LightNovelRest updateLightNovel(@Valid @ModelAttribute LightNovelDetailsRequestModel lightNovelDetails,
+			@PathVariable String lightNovelId) {
+		// Standard Strategy tries to map List<String> genresIdList to long id
+		modelMapper.getConfiguration()
+				.setMatchingStrategy(MatchingStrategies.STRICT);
+		LightNovelDto lightNovelDto = modelMapper.map(lightNovelDetails, LightNovelDto.class);
+		LightNovelDto updatedLightNovel = lightNovelService.updateLightNovel(lightNovelId, lightNovelDto);
+
+		return modelMapper.map(updatedLightNovel, LightNovelRest.class);
 	}
 
 	@GetMapping
