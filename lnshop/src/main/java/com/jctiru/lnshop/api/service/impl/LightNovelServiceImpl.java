@@ -131,7 +131,12 @@ public class LightNovelServiceImpl implements LightNovelService {
 		LightNovelEntity lightNovelEntity = lightNovelRepository.findByLightNovelId(lightNovelId);
 
 		if (lightNovelEntity == null) {
-			throw new RecordNotFoundException("");
+			throw new RecordNotFoundException(lightNovelId + " not found.");
+		}
+
+		if (lightNovelEntity.getImageUrl() != null) {
+			String fileName = amazonS3ClientService.getFileNameFromImageUrl(lightNovelEntity.getImageUrl());
+			amazonS3ClientService.deleteFileFromS3Bucket(fileName);
 		}
 
 		lightNovelRepository.delete(lightNovelEntity);

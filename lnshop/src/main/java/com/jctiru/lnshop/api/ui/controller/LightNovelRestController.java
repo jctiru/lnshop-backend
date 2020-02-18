@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +28,7 @@ import com.jctiru.lnshop.api.ui.model.request.LightNovelDetailsRequestModel;
 import com.jctiru.lnshop.api.ui.model.response.GenreRest;
 import com.jctiru.lnshop.api.ui.model.response.LightNovelPageRest;
 import com.jctiru.lnshop.api.ui.model.response.LightNovelRest;
+import com.jctiru.lnshop.api.ui.model.response.OperationStatusModel;
 
 @RestController
 @RequestMapping("lightnovels")
@@ -64,6 +66,17 @@ public class LightNovelRestController {
 		LightNovelDto updatedLightNovel = lightNovelService.updateLightNovel(lightNovelId, lightNovelDto);
 
 		return modelMapper.map(updatedLightNovel, LightNovelRest.class);
+	}
+
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@DeleteMapping(path = "/{lightNovelId}")
+	public OperationStatusModel deleteLightNovel(@PathVariable String lightNovelId) {
+		OperationStatusModel returnValue = new OperationStatusModel();
+		returnValue.setOperationName("DELETE");
+		lightNovelService.deleteLightNovel(lightNovelId);
+		returnValue.setOperationResult("SUCCESS");
+
+		return returnValue;
 	}
 
 	@GetMapping
