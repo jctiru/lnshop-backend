@@ -97,16 +97,18 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
 		res.setContentType("application/json");
 		res.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
-		res.getWriter().append(jsonResponse(token, userDto.getUserId(), userDto.getRoles(),
+		res.getWriter().append(jsonResponse(token, userDto.getUserId(), userDto.getRoles(), userDto.getEmail(),
 				userDto.getFirstName(), userDto.getLastName()));
 	}
 
-	private String jsonResponse(String token, String userId, Set<RoleEntity> roles, String firstName, String lastName) {
+	private String jsonResponse(String token, String userId, Set<RoleEntity> roles, String email, String firstName,
+			String lastName) {
 		String role = roles.iterator().next().getName();
 
 		return "{\"token\": \"" + token + "\", "
 				+ "\"userId\": \"" + userId + "\", "
 				+ "\"role\": \"" + role + "\", "
+				+ "\"email\": \"" + email + "\", "
 				+ "\"firstName\": \"" + firstName + "\", "
 				+ "\"lastName\": \"" + lastName + "\"}";
 	}

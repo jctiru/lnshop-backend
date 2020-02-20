@@ -70,7 +70,7 @@ public class AppExceptionsHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<Object> handleOtherExceptions(Exception ex, WebRequest request) {
-		ErrorResponse error = new ErrorResponse(HttpStatus.CONFLICT, LocalDateTime.now(), "Error",
+		ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST, LocalDateTime.now(), "Error",
 				Collections.singletonMap("error", ex.getMessage()));
 
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
