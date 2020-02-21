@@ -13,6 +13,7 @@ import com.jctiru.lnshop.api.service.StripeService;
 import com.jctiru.lnshop.api.shared.dto.LightNovelDto;
 import com.jctiru.lnshop.api.ui.model.request.OrderRequestModel;
 import com.stripe.model.Charge;
+import com.stripe.model.Token;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -34,7 +35,9 @@ public class OrderServiceImpl implements OrderService {
 			totalAmount = totalAmount.add(lightNovelDto.getPrice().multiply(new BigDecimal(item.getValue())));
 		}
 
-		Charge charge = stripeService.createCharge(orderRequest.getToken(), totalAmount, email);
+		Token token = stripeService.retrieveToken(orderRequest.getStripeTokenId());
+		System.out.println(token);
+		Charge charge = stripeService.createCharge(token, totalAmount, email, orderRequest.getAddressArgs());
 		System.out.println(charge);
 	}
 
