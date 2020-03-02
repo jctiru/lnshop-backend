@@ -12,4 +12,6 @@ public interface OrderService {
 
 	OrderPageDto getOrders(int page, int limit);
 
+	OrderPageDto getOrders(int page, int limit, String email);
+
 }

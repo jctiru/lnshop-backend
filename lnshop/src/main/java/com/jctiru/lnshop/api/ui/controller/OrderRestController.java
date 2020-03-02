@@ -43,9 +43,18 @@ public class OrderRestController {
 
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping("/admin")
-	public OrderOverviewPageRest getAllOrders(@RequestParam(value = "page", defaultValue = "0") int page,
+	public OrderOverviewPageRest getOrders(@RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "limit", defaultValue = "8") int limit) {
 		OrderPageDto orderPageDto = orderService.getOrders(page, limit);
+
+		return modelMapper.map(orderPageDto, OrderOverviewPageRest.class);
+	}
+
+	@PreAuthorize("isAuthenticated()")
+	@GetMapping
+	public OrderOverviewPageRest getOrders(@RequestParam(value = "page", defaultValue = "0") int page,
+			@RequestParam(value = "limit", defaultValue = "8") int limit, Authentication authentication) {
+		OrderPageDto orderPageDto = orderService.getOrders(page, limit, authentication.getName());
 
 		return modelMapper.map(orderPageDto, OrderOverviewPageRest.class);
 	}

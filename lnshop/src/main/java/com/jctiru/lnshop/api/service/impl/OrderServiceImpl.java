@@ -130,4 +130,30 @@ public class OrderServiceImpl implements OrderService {
 		return returnValue;
 	}
 
+	@Override
+	public OrderPageDto getOrders(int page, int limit, String email) {
+		if (page > 0) {
+			page = page - 1;
+		}
+
+		Pageable pageable = PageRequest.of(page, limit, Sort.by("createDateTime").descending());
+		Page<OrderEntity> ordersPage = orderRepository.findAllByUser_Email(email, pageable);
+		List<OrderEntity> orders = ordersPage.getContent();
+		List<OrderDto> ordersDto = new ArrayList<>();
+
+		modelMapper.typeMap(OrderEntity.class, OrderDto.class)
+				.addMappings(mapper -> mapper.skip(OrderDto::setOrderItems));
+
+		for (OrderEntity orderEntity : orders) {
+			OrderDto orderDto = modelMapper.map(orderEntity, OrderDto.class);
+			ordersDto.add(orderDto);
+		}
+
+		OrderPageDto returnValue = new OrderPageDto();
+		returnValue.setTotalPages(ordersPage.getTotalPages());
+		returnValue.setOrders(ordersDto);
+
+		return returnValue;
+	}
+
 }
