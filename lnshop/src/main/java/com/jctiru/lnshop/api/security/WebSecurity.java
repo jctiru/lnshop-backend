@@ -33,6 +33,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL).permitAll()
 				.antMatchers(HttpMethod.POST, "/lightnovels/**").hasAuthority("ADMIN")
 				.antMatchers(HttpMethod.GET, "/lightnovels/**").permitAll()
+				.antMatchers(HttpMethod.GET, "/orders/admin").hasAuthority("ADMIN")
 				.anyRequest().authenticated()
 				.and()
 				.addFilter(customAuthenticationFilter)

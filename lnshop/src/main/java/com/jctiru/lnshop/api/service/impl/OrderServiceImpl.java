@@ -2,11 +2,17 @@ package com.jctiru.lnshop.api.service.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.transaction.Transactional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.jctiru.lnshop.api.io.entity.LightNovelEntity;
@@ -20,6 +26,8 @@ import com.jctiru.lnshop.api.io.repository.UserRepository;
 import com.jctiru.lnshop.api.service.OrderService;
 import com.jctiru.lnshop.api.service.StripeService;
 import com.jctiru.lnshop.api.shared.Utils;
+import com.jctiru.lnshop.api.shared.dto.OrderDto;
+import com.jctiru.lnshop.api.shared.dto.OrderPageDto;
 import com.jctiru.lnshop.api.ui.model.request.OrderRequestModel;
 import com.stripe.model.Charge;
 import com.stripe.model.Token;
@@ -41,6 +49,9 @@ public class OrderServiceImpl implements OrderService {
 
 	@Autowired
 	Utils utils;
+
+	@Autowired
+	ModelMapper modelMapper;
 
 	@Transactional
 	@Override
@@ -84,6 +95,39 @@ public class OrderServiceImpl implements OrderService {
 		user.addOrder(order);
 
 		orderRepository.save(order);
+	}
+
+	@Override
+	public OrderDto getOrderByOrderId(String orderId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Transactional
+	@Override
+	public OrderPageDto getOrders(int page, int limit) {
+		if (page > 0) {
+			page = page - 1;
+		}
+
+		Pageable pageable = PageRequest.of(page, limit, Sort.by("createDateTime").descending());
+		Page<OrderEntity> ordersPage = orderRepository.findAll(pageable);
+		List<OrderEntity> orders = ordersPage.getContent();
+		List<OrderDto> ordersDto = new ArrayList<>();
+
+		modelMapper.typeMap(OrderEntity.class, OrderDto.class)
+				.addMappings(mapper -> mapper.skip(OrderDto::setOrderItems));
+
+		for (OrderEntity orderEntity : orders) {
+			OrderDto orderDto = modelMapper.map(orderEntity, OrderDto.class);
+			ordersDto.add(orderDto);
+		}
+
+		OrderPageDto returnValue = new OrderPageDto();
+		returnValue.setTotalPages(ordersPage.getTotalPages());
+		returnValue.setOrders(ordersDto);
+
+		return returnValue;
 	}
 
 }
