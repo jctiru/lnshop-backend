@@ -102,7 +102,15 @@ public class OrderEntity {
 		return shippingAddress;
 	}
 
+	// Modified for syncing one-to-one bidirectional association
 	public void setShippingAddress(ShippingAddressEntity shippingAddress) {
+		if (shippingAddress == null) {
+			if (this.shippingAddress != null) {
+				this.shippingAddress.setOrder(null);
+			}
+		} else {
+			shippingAddress.setOrder(this);
+		}
 		this.shippingAddress = shippingAddress;
 	}
 
@@ -136,6 +144,12 @@ public class OrderEntity {
 
 	public void setUpdateDateTime(LocalDateTime updateDateTime) {
 		this.updateDateTime = updateDateTime;
+	}
+
+	// Helper method
+	public void addOrderItem(OrderItemEntity orderItem) {
+		this.orderItems.add(orderItem);
+		orderItem.setOrder(this);
 	}
 
 }

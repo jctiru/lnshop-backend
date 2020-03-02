@@ -55,6 +55,7 @@ public class UserServiceImpl implements UserService {
 		return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), authorities);
 	}
 
+	@Transactional
 	@Override
 	public UserDto createUser(UserDto user) {
 		if (userRepository.findUserByEmail(user.getEmail()) != null) {

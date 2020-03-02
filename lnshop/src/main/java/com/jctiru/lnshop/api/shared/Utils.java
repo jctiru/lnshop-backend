@@ -10,9 +10,7 @@ import org.springframework.stereotype.Component;
 public class Utils {
 
 	public enum EntityType {
-		USER,
-		LIGHTNOVEL,
-		GENRE
+		USER, LIGHTNOVEL, GENRE, ORDER
 	}
 
 	private final Random random = new SecureRandom();
@@ -25,6 +23,7 @@ public class Utils {
 		switch (entityType) {
 		case USER:
 		case LIGHTNOVEL:
+		case ORDER:
 			return generateRandomString(50);
 		case GENRE:
 			return generateRandomString(10);

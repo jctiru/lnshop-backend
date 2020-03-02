@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.transaction.Transactional;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,6 +44,7 @@ public class LightNovelServiceImpl implements LightNovelService {
 	@Autowired
 	ModelMapper modelMapper;
 
+	@Transactional
 	@Override
 	public LightNovelDto createLightNovel(LightNovelDto lightNovel) {
 		LightNovelEntity lightNovelEntity = modelMapper.map(lightNovel, LightNovelEntity.class);
@@ -73,6 +76,7 @@ public class LightNovelServiceImpl implements LightNovelService {
 		return modelMapper.map(storedLightNovelDetails, LightNovelDto.class);
 	}
 
+	@Transactional
 	@Override
 	public LightNovelDto updateLightNovel(String lightNovelId, LightNovelDto lightNovel) {
 		LightNovelEntity lightNovelEntity = lightNovelRepository.findByLightNovelId(lightNovelId);
@@ -115,6 +119,7 @@ public class LightNovelServiceImpl implements LightNovelService {
 		return modelMapper.map(updatedLightNovel, LightNovelDto.class);
 	}
 
+	@Transactional
 	@Override
 	public LightNovelDto getLightNovelByLightNovelId(String lightNovelId) {
 		LightNovelEntity lightNovelEntity = lightNovelRepository.findByLightNovelId(lightNovelId);
@@ -126,6 +131,7 @@ public class LightNovelServiceImpl implements LightNovelService {
 		return modelMapper.map(lightNovelEntity, LightNovelDto.class);
 	}
 
+	@Transactional
 	@Override
 	public void deleteLightNovel(String lightNovelId) {
 		LightNovelEntity lightNovelEntity = lightNovelRepository.findByLightNovelId(lightNovelId);
@@ -142,6 +148,7 @@ public class LightNovelServiceImpl implements LightNovelService {
 		lightNovelRepository.delete(lightNovelEntity);
 	}
 
+	@Transactional
 	@Override
 	public LightNovelPageDto getLightNovels(int page, int limit, List<String> genres, String search) {
 		if (page > 0) {
