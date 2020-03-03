@@ -10,6 +10,8 @@ import com.jctiru.lnshop.api.io.entity.OrderEntity;
 @Repository
 public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
 
+	OrderEntity findByOrderId(String orderId);
+
 	Page<OrderEntity> findAllByUser_Email(String email, Pageable page);
 
 }

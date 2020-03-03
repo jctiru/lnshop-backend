@@ -7,14 +7,18 @@ import java.util.Map;
 
 import javax.transaction.Transactional;
 
+import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import com.jctiru.lnshop.api.exception.RecordNotFoundException;
 import com.jctiru.lnshop.api.io.entity.Card;
 import com.jctiru.lnshop.api.io.entity.LightNovelEntity;
 import com.jctiru.lnshop.api.io.entity.OrderEntity;
@@ -104,12 +108,6 @@ public class OrderServiceImpl implements OrderService {
 		orderRepository.save(order);
 	}
 
-	@Override
-	public OrderDto getOrderByOrderId(String orderId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	@Transactional
 	@Override
 	public OrderPageDto getOrders(int page, int limit) {
@@ -161,6 +159,29 @@ public class OrderServiceImpl implements OrderService {
 		returnValue.setOrders(ordersDto);
 
 		return returnValue;
+	}
+
+	@Transactional
+	@Override
+	public OrderDto getOrderByOrderId(String orderId, Authentication authentication) {
+		OrderEntity orderEntity = orderRepository.findByOrderId(orderId);
+
+		if (orderEntity == null) {
+			throw new RecordNotFoundException(orderId + " not found");
+		}
+
+		if (authentication.getAuthorities().iterator().next().getAuthority().equals("ADMIN")
+				|| authentication.getName().equals(orderEntity.getUser().getEmail())) {
+			// Initialize lazy-loaded user and deeply nested lazy-loaded genres
+			Hibernate.initialize(orderEntity.getUser());
+			orderEntity.getOrderItems()
+					.forEach(orderItem -> Hibernate.initialize(orderItem.getLightNovel().getGenres()));
+
+			return modelMapper.map(orderEntity, OrderDto.class);
+		} else {
+			throw new AccessDeniedException("Access Denied");
+		}
+
 	}
 
 }

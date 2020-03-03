@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jctiru.lnshop.api.service.OrderService;
+import com.jctiru.lnshop.api.shared.dto.OrderDto;
 import com.jctiru.lnshop.api.shared.dto.OrderPageDto;
 import com.jctiru.lnshop.api.ui.model.request.OrderRequestModel;
 import com.jctiru.lnshop.api.ui.model.response.OperationStatusModel;
+import com.jctiru.lnshop.api.ui.model.response.OrderDetailsRest;
 import com.jctiru.lnshop.api.ui.model.response.OrderOverviewPageRest;
 
 @RestController
@@ -57,6 +60,14 @@ public class OrderRestController {
 		OrderPageDto orderPageDto = orderService.getOrders(page, limit, authentication.getName());
 
 		return modelMapper.map(orderPageDto, OrderOverviewPageRest.class);
+	}
+
+	@PreAuthorize("isAuthenticated()")
+	@GetMapping(path = "/{orderId}")
+	public OrderDetailsRest getOrder(@PathVariable String orderId, Authentication authentication) {
+		OrderDto orderDto = orderService.getOrderByOrderId(orderId, authentication);
+
+		return modelMapper.map(orderDto, OrderDetailsRest.class);
 	}
 
 }
