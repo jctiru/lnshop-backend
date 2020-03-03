@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.jctiru.lnshop.api.io.entity.Card;
 import com.jctiru.lnshop.api.io.entity.OrderItemEntity;
 import com.jctiru.lnshop.api.io.entity.ShippingAddressEntity;
 import com.jctiru.lnshop.api.io.entity.UserEntity;
@@ -15,9 +16,12 @@ public class OrderDto {
 	private String stripeTokenId;
 	private String stripeChargeId;
 	private UserEntity user;
+	private Card card;
 	private ShippingAddressEntity shippingAddress;
 	private List<OrderItemEntity> orderItems;
 	private BigDecimal total;
+	private LocalDateTime createDateTime;
+	private LocalDateTime updateDateTime;
 
 	public long getId() {
 		return id;
@@ -59,6 +63,14 @@ public class OrderDto {
 		this.user = user;
 	}
 
+	public Card getCard() {
+		return card;
+	}
+
+	public void setCard(Card card) {
+		this.card = card;
+	}
+
 	public ShippingAddressEntity getShippingAddress() {
 		return shippingAddress;
 	}
@@ -98,8 +110,5 @@ public class OrderDto {
 	public void setUpdateDateTime(LocalDateTime updateDateTime) {
 		this.updateDateTime = updateDateTime;
 	}
-
-	private LocalDateTime createDateTime;
-	private LocalDateTime updateDateTime;
 
 }

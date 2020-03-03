@@ -4,8 +4,10 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.persistence.AttributeOverride;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -40,6 +42,12 @@ public class OrderEntity {
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "user_id", nullable = false)
 	private UserEntity user;
+
+	@Embedded
+	@AttributeOverride(name = "brand", column = @Column(name = "card_brand", nullable = false))
+	@AttributeOverride(name = "funding", column = @Column(name = "card_funding", nullable = false))
+	@AttributeOverride(name = "last4", column = @Column(name = "card_last4", nullable = false))
+	private Card card;
 
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, optional = false)
 	private ShippingAddressEntity shippingAddress;
@@ -96,6 +104,14 @@ public class OrderEntity {
 
 	public void setUser(UserEntity user) {
 		this.user = user;
+	}
+
+	public Card getCard() {
+		return card;
+	}
+
+	public void setCard(Card card) {
+		this.card = card;
 	}
 
 	public ShippingAddressEntity getShippingAddress() {

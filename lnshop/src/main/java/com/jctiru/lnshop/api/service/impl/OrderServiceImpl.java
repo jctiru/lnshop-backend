@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.jctiru.lnshop.api.io.entity.Card;
 import com.jctiru.lnshop.api.io.entity.LightNovelEntity;
 import com.jctiru.lnshop.api.io.entity.OrderEntity;
 import com.jctiru.lnshop.api.io.entity.OrderItemEntity;
@@ -76,6 +77,12 @@ public class OrderServiceImpl implements OrderService {
 
 		Token token = stripeService.retrieveToken(orderRequest.getStripeTokenId());
 		Charge charge = stripeService.createCharge(token, totalAmount, email, orderRequest.getAddressArgs());
+
+		Card card = new Card();
+		card.setBrand(charge.getPaymentMethodDetails().getCard().getBrand());
+		card.setFunding(charge.getPaymentMethodDetails().getCard().getFunding());
+		card.setLast4(charge.getPaymentMethodDetails().getCard().getLast4());
+		order.setCard(card);
 
 		Map<String, String> chargeMetaData = charge.getMetadata();
 		ShippingAddressEntity shippingAddress = new ShippingAddressEntity();
