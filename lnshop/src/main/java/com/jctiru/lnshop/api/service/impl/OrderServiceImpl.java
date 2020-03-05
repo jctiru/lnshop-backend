@@ -172,10 +172,17 @@ public class OrderServiceImpl implements OrderService {
 
 		if (authentication.getAuthorities().iterator().next().getAuthority().equals("ADMIN")
 				|| authentication.getName().equals(orderEntity.getUser().getEmail())) {
-			// Initialize lazy-loaded user and deeply nested lazy-loaded genres
+			// Initialize lazy-loaded user, shippingAddress, orderItems, lightNovels and
+			// Genres
 			Hibernate.initialize(orderEntity.getUser());
+			Hibernate.initialize(orderEntity.getShippingAddress());
 			orderEntity.getOrderItems()
 					.forEach(orderItem -> Hibernate.initialize(orderItem.getLightNovel().getGenres()));
+
+			// Manually set mapping because model mapper skips order items after first call
+			// (bug?)
+			modelMapper.typeMap(OrderEntity.class, OrderDto.class)
+					.addMappings(mapper -> mapper.map(OrderEntity::getOrderItems, OrderDto::setOrderItems));
 
 			return modelMapper.map(orderEntity, OrderDto.class);
 		} else {

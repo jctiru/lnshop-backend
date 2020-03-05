@@ -11,6 +11,7 @@ public class OrderDetailsRest {
 	private String orderId;
 	private UserRest user;
 	private Card card;
+	private ShippingAddressRest shippingAddress;
 	private List<OrderItemRest> orderItems;
 	private BigDecimal total;
 	private LocalDateTime createDateTime;
@@ -37,6 +38,14 @@ public class OrderDetailsRest {
 
 	public void setCard(Card card) {
 		this.card = card;
+	}
+
+	public ShippingAddressRest getShippingAddress() {
+		return shippingAddress;
+	}
+
+	public void setShippingAddress(ShippingAddressRest shippingAddress) {
+		this.shippingAddress = shippingAddress;
 	}
 
 	public List<OrderItemRest> getOrderItems() {
