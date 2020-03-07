@@ -69,6 +69,8 @@ public class OrderServiceImpl implements OrderService {
 		for (Map.Entry<String, Integer> item : orderRequest.getCartItems().entrySet()) {
 			OrderItemEntity orderItem = new OrderItemEntity();
 			LightNovelEntity lightNovel = lightNovelRepository.findByLightNovelId(item.getKey());
+			lightNovel.setQuantity(lightNovel.getQuantity() - (long) item.getValue());
+			lightNovel.setSold(lightNovel.getSold() + (long) item.getValue());
 			orderItem.setLightNovel(lightNovel);
 			orderItem.setQuantity(item.getValue());
 			orderItem.setPrice(lightNovel.getPrice());
