@@ -1,13 +1,27 @@
 package com.jctiru.lnshop.api.shared;
 
 import java.security.SecureRandom;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.jctiru.lnshop.api.AppPropertiesFile;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 
 @Component
 public class Utils {
+
+	@Autowired
+	AppPropertiesFile appProperties;
+
+	private static AppPropertiesFile staticAppProperties;
 
 	public enum EntityType {
 		USER, LIGHTNOVEL, GENRE, ORDER
@@ -18,6 +32,11 @@ public class Utils {
 	private static final String LOWER = UPPER.toLowerCase(Locale.ROOT);
 	private static final String DIGITS = "0123456789";
 	private static final String ALPHANUM = UPPER + LOWER + DIGITS;
+
+	@PostConstruct
+	public void init() {
+		Utils.staticAppProperties = appProperties;
+	}
 
 	public String generatePublicEntityId(EntityType entityType) {
 		switch (entityType) {
@@ -40,6 +59,15 @@ public class Utils {
 		}
 
 		return returnValue.toString();
+	}
+
+	public static boolean hasTokenExpired(String token) {
+		Claims claims = Jwts.parser().setSigningKey(staticAppProperties.getTokenSecret()).parseClaimsJws(token)
+				.getBody();
+		Date tokenExpirationDate = claims.getExpiration();
+		Date todayDate = new Date();
+
+		return tokenExpirationDate.before(todayDate);
 	}
 
 }

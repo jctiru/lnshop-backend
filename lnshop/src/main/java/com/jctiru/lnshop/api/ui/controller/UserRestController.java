@@ -12,11 +12,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jctiru.lnshop.api.service.UserService;
 import com.jctiru.lnshop.api.shared.dto.UserDto;
 import com.jctiru.lnshop.api.ui.model.request.UserDetailsRequestModel;
+import com.jctiru.lnshop.api.ui.model.response.OperationStatusModel;
+import com.jctiru.lnshop.api.ui.model.response.RequestOperationName;
+import com.jctiru.lnshop.api.ui.model.response.RequestOperationResult;
 import com.jctiru.lnshop.api.ui.model.response.UserRest;
 
 @RestController
@@ -37,7 +41,22 @@ public class UserRestController {
 		return modelMapper.map(createdUser, UserRest.class);
 	}
 
-	//@PreAuthorize("hasAuthority('USER')")
+	@GetMapping(path = "/email-verification")
+	public OperationStatusModel verifyEmailToken(@RequestParam String token) {
+		OperationStatusModel returnValue = new OperationStatusModel();
+		returnValue.setOperationName(RequestOperationName.VERIFY_EMAIL.name());
+		boolean isVerified = userService.verifyEmailToken(token);
+
+		if (isVerified) {
+			returnValue.setOperationResult(RequestOperationResult.SUCCESS.name());
+		} else {
+			returnValue.setOperationResult(RequestOperationResult.ERROR.name());
+		}
+
+		return returnValue;
+	}
+
+	// @PreAuthorize("hasAuthority('USER')")
 	@PreAuthorize("isAuthenticated()")
 	@GetMapping(value = "/user-path")
 	public Map<String, String> getString() {

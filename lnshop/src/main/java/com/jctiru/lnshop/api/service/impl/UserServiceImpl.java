@@ -90,6 +90,25 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public boolean verifyEmailToken(String token) {
+		boolean returnValue = false;
+		UserEntity userEntity = userRepository.findByEmailVerificationToken(token);
+
+		if (userEntity != null) {
+			boolean hasTokenExpired = Utils.hasTokenExpired(token);
+
+			if (!hasTokenExpired) {
+				userEntity.setEmailVerificationToken(null);
+				userEntity.setEmailVerificationStatus(true);
+				userRepository.save(userEntity);
+				returnValue = true;
+			}
+		}
+
+		return returnValue;
+	}
+
+	@Override
 	public UserDto getUserByUserId(String userId) {
 		// TODO Auto-generated method stub
 		return null;
