@@ -29,6 +29,8 @@ import com.jctiru.lnshop.api.ui.model.response.GenreRest;
 import com.jctiru.lnshop.api.ui.model.response.LightNovelPageRest;
 import com.jctiru.lnshop.api.ui.model.response.LightNovelRest;
 import com.jctiru.lnshop.api.ui.model.response.OperationStatusModel;
+import com.jctiru.lnshop.api.ui.model.response.RequestOperationName;
+import com.jctiru.lnshop.api.ui.model.response.RequestOperationResult;
 
 @RestController
 @RequestMapping("lightnovels")
@@ -47,8 +49,7 @@ public class LightNovelRestController {
 	@PostMapping
 	public LightNovelRest createLightNovel(@Valid @ModelAttribute LightNovelDetailsRequestModel lightNovelDetails) {
 		// Standard Strategy tries to map List<String> genresIdList to long id
-		modelMapper.getConfiguration()
-				.setMatchingStrategy(MatchingStrategies.STRICT);
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		LightNovelDto lightNovelDto = modelMapper.map(lightNovelDetails, LightNovelDto.class);
 		LightNovelDto createdLightNovel = lightNovelService.createLightNovel(lightNovelDto);
 
@@ -60,8 +61,7 @@ public class LightNovelRestController {
 	public LightNovelRest updateLightNovel(@Valid @ModelAttribute LightNovelDetailsRequestModel lightNovelDetails,
 			@PathVariable String lightNovelId) {
 		// Standard Strategy tries to map List<String> genresIdList to long id
-		modelMapper.getConfiguration()
-				.setMatchingStrategy(MatchingStrategies.STRICT);
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		LightNovelDto lightNovelDto = modelMapper.map(lightNovelDetails, LightNovelDto.class);
 		LightNovelDto updatedLightNovel = lightNovelService.updateLightNovel(lightNovelId, lightNovelDto);
 
@@ -72,9 +72,9 @@ public class LightNovelRestController {
 	@DeleteMapping(path = "/{lightNovelId}")
 	public OperationStatusModel deleteLightNovel(@PathVariable String lightNovelId) {
 		OperationStatusModel returnValue = new OperationStatusModel();
-		returnValue.setOperationName("DELETE");
+		returnValue.setOperationName(RequestOperationName.DELETE.name());
 		lightNovelService.deleteLightNovel(lightNovelId);
-		returnValue.setOperationResult("SUCCESS");
+		returnValue.setOperationResult(RequestOperationResult.SUCCESS.name());
 
 		return returnValue;
 	}

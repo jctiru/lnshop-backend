@@ -21,6 +21,8 @@ import com.jctiru.lnshop.api.ui.model.request.OrderRequestModel;
 import com.jctiru.lnshop.api.ui.model.response.OperationStatusModel;
 import com.jctiru.lnshop.api.ui.model.response.OrderDetailsRest;
 import com.jctiru.lnshop.api.ui.model.response.OrderOverviewPageRest;
+import com.jctiru.lnshop.api.ui.model.response.RequestOperationName;
+import com.jctiru.lnshop.api.ui.model.response.RequestOperationResult;
 
 @RestController
 @RequestMapping("orders")
@@ -37,9 +39,9 @@ public class OrderRestController {
 	public OperationStatusModel orderLightNovels(@Valid @RequestBody OrderRequestModel orderRequest,
 			Authentication authentication) {
 		OperationStatusModel returnValue = new OperationStatusModel();
-		returnValue.setOperationName("PAYMENT");
+		returnValue.setOperationName(RequestOperationName.ORDER.name());
 		orderService.createOrder(orderRequest, authentication.getName());
-		returnValue.setOperationResult("SUCCESS");
+		returnValue.setOperationResult(RequestOperationResult.SUCCESS.name());
 
 		return returnValue;
 	}
