@@ -11,9 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.jctiru.lnshop.api.AppPropertiesFile;
+import com.jctiru.lnshop.api.security.SecurityConstants;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 @Component
 public class Utils {
@@ -68,6 +70,13 @@ public class Utils {
 		Date todayDate = new Date();
 
 		return tokenExpirationDate.before(todayDate);
+	}
+
+	public static String generateEmailVerificationToken(String userId) {
+		return Jwts.builder().setSubject(userId)
+				.setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
+				.signWith(SignatureAlgorithm.HS512, staticAppProperties.getTokenSecret()).compact();
+
 	}
 
 }

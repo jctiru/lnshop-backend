@@ -71,6 +71,7 @@ public class UserServiceImpl implements UserService {
 		userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
 		userEntity.setRoles(new HashSet<RoleEntity>(Arrays.asList(roleRepository.findRoleByName("USER"))));
+		userEntity.setEmailVerificationToken(Utils.generateEmailVerificationToken(publicUserId));
 
 		UserEntity storedUserDetails = userRepository.save(userEntity);
 
