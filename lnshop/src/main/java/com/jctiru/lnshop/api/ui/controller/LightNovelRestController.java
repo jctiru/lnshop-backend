@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jctiru.lnshop.api.service.GenreService;
 import com.jctiru.lnshop.api.service.LightNovelService;
+import com.jctiru.lnshop.api.shared.RequestOperationName;
+import com.jctiru.lnshop.api.shared.RequestOperationResult;
 import com.jctiru.lnshop.api.shared.dto.GenreDto;
 import com.jctiru.lnshop.api.shared.dto.LightNovelDto;
 import com.jctiru.lnshop.api.shared.dto.LightNovelPageDto;
@@ -29,8 +31,6 @@ import com.jctiru.lnshop.api.ui.model.response.GenreRest;
 import com.jctiru.lnshop.api.ui.model.response.LightNovelPageRest;
 import com.jctiru.lnshop.api.ui.model.response.LightNovelRest;
 import com.jctiru.lnshop.api.ui.model.response.OperationStatusModel;
-import com.jctiru.lnshop.api.ui.model.response.RequestOperationName;
-import com.jctiru.lnshop.api.ui.model.response.RequestOperationResult;
 
 @RestController
 @RequestMapping("lightnovels")

@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jctiru.lnshop.api.service.OrderService;
+import com.jctiru.lnshop.api.shared.RequestOperationName;
+import com.jctiru.lnshop.api.shared.RequestOperationResult;
 import com.jctiru.lnshop.api.shared.dto.OrderDto;
 import com.jctiru.lnshop.api.shared.dto.OrderPageDto;
 import com.jctiru.lnshop.api.ui.model.request.OrderRequestModel;
 import com.jctiru.lnshop.api.ui.model.response.OperationStatusModel;
 import com.jctiru.lnshop.api.ui.model.response.OrderDetailsRest;
 import com.jctiru.lnshop.api.ui.model.response.OrderOverviewPageRest;
-import com.jctiru.lnshop.api.ui.model.response.RequestOperationName;
-import com.jctiru.lnshop.api.ui.model.response.RequestOperationResult;
 
 @RestController
 @RequestMapping("orders")

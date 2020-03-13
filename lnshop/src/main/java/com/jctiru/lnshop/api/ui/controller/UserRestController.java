@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jctiru.lnshop.api.service.UserService;
+import com.jctiru.lnshop.api.shared.RequestOperationName;
+import com.jctiru.lnshop.api.shared.RequestOperationResult;
 import com.jctiru.lnshop.api.shared.dto.UserDto;
 import com.jctiru.lnshop.api.ui.model.request.UserDetailsRequestModel;
 import com.jctiru.lnshop.api.ui.model.response.OperationStatusModel;
-import com.jctiru.lnshop.api.ui.model.response.RequestOperationName;
-import com.jctiru.lnshop.api.ui.model.response.RequestOperationResult;
 import com.jctiru.lnshop.api.ui.model.response.UserRest;
 
 @RestController

@@ -1,4 +1,4 @@
-package com.jctiru.lnshop.api.ui.model.response;
+package com.jctiru.lnshop.api.shared;
 
 public enum RequestOperationName {
 
