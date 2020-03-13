@@ -3,8 +3,10 @@ package com.jctiru.lnshop.api.ui.controller;
 import java.util.Collections;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.http.HttpStatus;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,7 +44,7 @@ public class UserRestController {
 	}
 
 	@GetMapping(path = "/email-verification")
-	public OperationStatusModel verifyEmailToken(@RequestParam String token) {
+	public OperationStatusModel verifyEmailToken(@RequestParam String token, HttpServletResponse response) {
 		OperationStatusModel returnValue = new OperationStatusModel();
 		returnValue.setOperationName(RequestOperationName.VERIFY_EMAIL.name());
 		boolean isVerified = userService.verifyEmailToken(token);
@@ -51,6 +53,7 @@ public class UserRestController {
 			returnValue.setOperationResult(RequestOperationResult.SUCCESS.name());
 		} else {
 			returnValue.setOperationResult(RequestOperationResult.ERROR.name());
+			response.setStatus(HttpStatus.SC_UNPROCESSABLE_ENTITY);
 		}
 
 		return returnValue;
