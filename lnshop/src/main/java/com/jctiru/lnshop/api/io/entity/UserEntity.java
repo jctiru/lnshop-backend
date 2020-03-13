@@ -120,7 +120,7 @@ public class UserEntity {
 		this.emailVerificationToken = emailVerificationToken;
 	}
 
-	public boolean isEmailVerificationStatus() {
+	public boolean getEmailVerificationStatus() {
 		return emailVerificationStatus;
 	}
 

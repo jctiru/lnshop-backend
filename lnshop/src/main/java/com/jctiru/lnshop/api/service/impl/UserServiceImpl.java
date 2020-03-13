@@ -52,7 +52,8 @@ public class UserServiceImpl implements UserService {
 		List<GrantedAuthority> authorities = userEntity.getRoles().stream()
 				.map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
 
-		return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), authorities);
+		return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(),
+				userEntity.getEmailVerificationStatus(), true, true, true, authorities);
 	}
 
 	@Transactional
