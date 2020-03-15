@@ -81,6 +81,10 @@
 			<artifactId>stripe-java</artifactId>
 			<version>17.11.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-ses</artifactId>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>

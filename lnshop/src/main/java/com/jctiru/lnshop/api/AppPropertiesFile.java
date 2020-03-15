@@ -18,4 +18,12 @@ public class AppPropertiesFile {
 		return env.getProperty("jwt.tokensecret");
 	}
 
+	public String getAppUrl() {
+		return env.getProperty("app.url");
+	}
+	
+	public String getAppFrontendUrl() {
+		return env.getProperty("app.frontend.url");
+	}
+
 }

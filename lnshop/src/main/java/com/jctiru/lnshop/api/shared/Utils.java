@@ -74,7 +74,8 @@ public class Utils {
 
 	public static String generateEmailVerificationToken(String userId) {
 		return Jwts.builder().setSubject(userId)
-				.setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
+				.setExpiration(new Date(
+						System.currentTimeMillis() + SecurityConstants.EMAIL_VERIFICATION_TOKEN_EXPIRATION_TIME))
 				.signWith(SignatureAlgorithm.HS512, staticAppProperties.getTokenSecret()).compact();
 
 	}

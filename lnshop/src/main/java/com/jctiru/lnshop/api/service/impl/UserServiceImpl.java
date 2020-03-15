@@ -22,6 +22,7 @@ import com.jctiru.lnshop.api.io.entity.RoleEntity;
 import com.jctiru.lnshop.api.io.entity.UserEntity;
 import com.jctiru.lnshop.api.io.repository.RoleRepository;
 import com.jctiru.lnshop.api.io.repository.UserRepository;
+import com.jctiru.lnshop.api.service.AmazonSESClientService;
 import com.jctiru.lnshop.api.service.UserService;
 import com.jctiru.lnshop.api.shared.Utils;
 import com.jctiru.lnshop.api.shared.dto.UserDto;
@@ -34,6 +35,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	RoleRepository roleRepository;
+
+	@Autowired
+	AmazonSESClientService amazonSESService;
 
 	@Autowired
 	Utils utils;
@@ -75,6 +79,11 @@ public class UserServiceImpl implements UserService {
 		userEntity.setEmailVerificationToken(Utils.generateEmailVerificationToken(publicUserId));
 
 		UserEntity storedUserDetails = userRepository.save(userEntity);
+
+		// Send email to verify email address
+		// Async method
+		amazonSESService.sendEmailVerification(storedUserDetails.getEmail(),
+				storedUserDetails.getEmailVerificationToken());
 
 		return modelMapper.map(storedUserDetails, UserDto.class);
 	}
