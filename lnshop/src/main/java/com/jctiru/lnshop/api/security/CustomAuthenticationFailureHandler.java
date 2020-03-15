@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
@@ -25,17 +26,35 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) throws IOException, ServletException {
-		response.setStatus(401);
+		int httpCode;
+
+		if (exception.getClass() == BadCredentialsException.class) {
+			httpCode = 401;
+		} else {
+			// DisabledException
+			httpCode = 403;
+		}
+
+		response.setStatus(httpCode);
 		response.setContentType("application/json");
-		response.getWriter().append(jsonResponse());
+		response.getWriter().append(jsonResponse(httpCode));
 	}
 
-	private String jsonResponse() {
+	private String jsonResponse(int httpCode) {
 		BadCredentialsResponse response = new BadCredentialsResponse();
 		response.setTimestamp(LocalDateTime.now());
-		response.setStatus(HttpStatus.UNAUTHORIZED.value());
-		response.setError("Unauthorized");
-		response.setMessage("Authentication failed: bad credentials");
+
+		if (httpCode == 401) {
+			response.setStatus(HttpStatus.UNAUTHORIZED.value());
+			response.setError("Unauthorized");
+			response.setMessage("Authentication failed: bad credentials");
+		} else {
+			// 403
+			response.setStatus(HttpStatus.FORBIDDEN.value());
+			response.setError("Forbidden");
+			response.setMessage("Authentication failed: user disabled");
+		}
+
 		response.setPath(SecurityConstants.SIGN_IN_URL);
 
 		String jsonResponse = "";
