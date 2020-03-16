@@ -14,6 +14,7 @@ import com.jctiru.lnshop.api.AppPropertiesFile;
 import com.jctiru.lnshop.api.service.AmazonSESClientService;
 import com.jctiru.lnshop.api.shared.AmazonSESFrom;
 import com.jctiru.lnshop.api.shared.EmailTemplates;
+import com.jctiru.lnshop.api.shared.dto.OrderDto;
 
 @Service
 public class AmazonSESClientServiceImpl implements AmazonSESClientService {
@@ -42,6 +43,36 @@ public class AmazonSESClientServiceImpl implements AmazonSESClientService {
 		Content textBody = new Content().withCharset("UTF-8")
 				.withData(EmailTemplates.getEmailVerificationTextBody(emailVerificationLink));
 		Body body = new Body().withHtml(htmlBody).withText(textBody);
+
+		// Create message with specified subject and body
+		Message message = new Message().withSubject(subject).withBody(body);
+
+		// Assemble email
+		SendEmailRequest request = new SendEmailRequest()
+				.withSource(source)
+				.withDestination(destination)
+				.withMessage(message);
+
+		// Send the email
+		amazonSES.sendEmail(request);
+	}
+
+	@Async
+	@Override
+	public void sendOrderConfirmation(String destinationEmail, OrderDto order) {
+		// Set sending email
+		String source = AmazonSESFrom.LNSHOP.getFrom();
+
+		// Set recipient address
+		Destination destination = new Destination().withToAddresses(destinationEmail);
+
+		// Create subject and body of message
+		Content subject = new Content().withCharset("UTF-8").withData(EmailTemplates.getOrderConfirmationSubject());
+		Content htmlBody = new Content().withCharset("UTF-8")
+				.withData(EmailTemplates.getOrderConrmationHtmlBody(order));
+//		Content textBody = new Content().withCharset("UTF-8")
+//				.withData(EmailTemplates.getEmailVerificationTextBody(emailVerificationLink));
+		Body body = new Body().withHtml(htmlBody);
 
 		// Create message with specified subject and body
 		Message message = new Message().withSubject(subject).withBody(body);

@@ -28,6 +28,7 @@ import com.jctiru.lnshop.api.io.entity.UserEntity;
 import com.jctiru.lnshop.api.io.repository.LightNovelRepository;
 import com.jctiru.lnshop.api.io.repository.OrderRepository;
 import com.jctiru.lnshop.api.io.repository.UserRepository;
+import com.jctiru.lnshop.api.service.AmazonSESClientService;
 import com.jctiru.lnshop.api.service.OrderService;
 import com.jctiru.lnshop.api.service.StripeService;
 import com.jctiru.lnshop.api.shared.Utils;
@@ -51,6 +52,9 @@ public class OrderServiceImpl implements OrderService {
 
 	@Autowired
 	OrderRepository orderRepository;
+
+	@Autowired
+	AmazonSESClientService amazonSESService;
 
 	@Autowired
 	Utils utils;
@@ -108,6 +112,10 @@ public class OrderServiceImpl implements OrderService {
 		user.addOrder(order);
 
 		orderRepository.save(order);
+
+		// Send email for order confirmation
+		// Async method
+		amazonSESService.sendOrderConfirmation(user.getEmail(), modelMapper.map(order, OrderDto.class));
 	}
 
 	@Transactional
