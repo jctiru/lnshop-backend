@@ -41,12 +41,16 @@ public class EmailTemplates {
 		return EMAIL_VERIFICATION_SUBJECT;
 	}
 
-	public static String getEmailVerificationHtmlBody(String emailVerificationLink) {
-		return EMAIL_VERIFICATION_HTML_BODY.replace("$emailVerificationLink", emailVerificationLink);
-	}
+	public static List<String> getEmailVerificationHtmlAndTextBody(String emailVerificationToken) {
+		List<String> emailVerificationHtmlAndTextBody = new ArrayList<>();
+		String emailVerificationLink = staticAppProperties.getAppFrontendUrl() + "/email-verification?token="
+				+ emailVerificationToken;
+		emailVerificationHtmlAndTextBody
+				.add(EMAIL_VERIFICATION_HTML_BODY.replace("$emailVerificationLink", emailVerificationLink));
+		emailVerificationHtmlAndTextBody
+				.add(EMAIL_VERIFICATION_TEXT_BODY.replace("$emailVerificationLink", emailVerificationLink));
 
-	public static String getEmailVerificationTextBody(String emailVerificationLink) {
-		return EMAIL_VERIFICATION_TEXT_BODY.replace("$emailVerificationLink", emailVerificationLink);
+		return emailVerificationHtmlAndTextBody;
 	}
 
 	public static String getOrderConfirmationSubject() {

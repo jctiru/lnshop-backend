@@ -12,7 +12,6 @@ import com.amazonaws.services.simpleemail.model.Content;
 import com.amazonaws.services.simpleemail.model.Destination;
 import com.amazonaws.services.simpleemail.model.Message;
 import com.amazonaws.services.simpleemail.model.SendEmailRequest;
-import com.jctiru.lnshop.api.AppPropertiesFile;
 import com.jctiru.lnshop.api.service.AmazonSESClientService;
 import com.jctiru.lnshop.api.shared.AmazonSESFrom;
 import com.jctiru.lnshop.api.shared.EmailTemplates;
@@ -20,9 +19,6 @@ import com.jctiru.lnshop.api.shared.dto.OrderDto;
 
 @Service
 public class AmazonSESClientServiceImpl implements AmazonSESClientService {
-
-	@Autowired
-	AppPropertiesFile appProperties;
 
 	@Autowired
 	AmazonSimpleEmailService amazonSES;
@@ -38,12 +34,9 @@ public class AmazonSESClientServiceImpl implements AmazonSESClientService {
 
 		// Create subject and body of message
 		Content subject = new Content().withCharset("UTF-8").withData(EmailTemplates.getEmailVerificationSubject());
-		String emailVerificationLink = appProperties.getAppFrontendUrl() + "/email-verification?token="
-				+ emailVerificationToken;
-		Content htmlBody = new Content().withCharset("UTF-8")
-				.withData(EmailTemplates.getEmailVerificationHtmlBody(emailVerificationLink));
-		Content textBody = new Content().withCharset("UTF-8")
-				.withData(EmailTemplates.getEmailVerificationTextBody(emailVerificationLink));
+		List<String> htmlAndTextBody = EmailTemplates.getEmailVerificationHtmlAndTextBody(emailVerificationToken);
+		Content htmlBody = new Content().withCharset("UTF-8").withData(htmlAndTextBody.get(0));
+		Content textBody = new Content().withCharset("UTF-8").withData(htmlAndTextBody.get(1));
 		Body body = new Body().withHtml(htmlBody).withText(textBody);
 
 		// Create message with specified subject and body
