@@ -1,5 +1,7 @@
 package com.jctiru.lnshop.api.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -68,11 +70,10 @@ public class AmazonSESClientServiceImpl implements AmazonSESClientService {
 
 		// Create subject and body of message
 		Content subject = new Content().withCharset("UTF-8").withData(EmailTemplates.getOrderConfirmationSubject());
-		Content htmlBody = new Content().withCharset("UTF-8")
-				.withData(EmailTemplates.getOrderConrmationHtmlBody(order));
-//		Content textBody = new Content().withCharset("UTF-8")
-//				.withData(EmailTemplates.getEmailVerificationTextBody(emailVerificationLink));
-		Body body = new Body().withHtml(htmlBody);
+		List<String> htmlAndTextBody = EmailTemplates.getOrderConfirmationHtmlAndTextBody(order);
+		Content htmlBody = new Content().withCharset("UTF-8").withData(htmlAndTextBody.get(0));
+		Content textBody = new Content().withCharset("UTF-8").withData(htmlAndTextBody.get(1));
+		Body body = new Body().withHtml(htmlBody).withText(textBody);
 
 		// Create message with specified subject and body
 		Message message = new Message().withSubject(subject).withBody(body);
