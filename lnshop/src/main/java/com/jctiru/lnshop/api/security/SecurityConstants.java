@@ -7,6 +7,7 @@ public final class SecurityConstants {
 
 	public static final long EXPIRATION_TIME = 864000000L; // 10 days
 	public static final long EMAIL_VERIFICATION_TOKEN_EXPIRATION_TIME = 86400000L; // 1 day
+	public static final long PASSWORD_RESET_TOKEN_EXPIRATION_TIME = 3600000L; // 1 hour
 	public static final String TOKEN_PREFIX = "Bearer ";
 	public static final String TOKEN_CLAIMS = "Authority";
 	public static final String HEADER_STRING = "Authorization";
