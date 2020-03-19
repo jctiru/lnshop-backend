@@ -134,12 +134,21 @@ public class UserServiceImpl implements UserService {
 		}
 
 		String token = Utils.generatePasswordResetToken(userEntity.getUserId());
+		PasswordResetTokenEntity passwordResetTokenEntity = passwordResetTokenRepository
+				.findPasswordResetTokenByUser_Email(email);
 
-		PasswordResetTokenEntity passwordResetTokenEntity = new PasswordResetTokenEntity();
-		passwordResetTokenEntity.setToken(token);
-		passwordResetTokenEntity.setUser(userEntity);
+		if (passwordResetTokenEntity == null) {
+			passwordResetTokenEntity = new PasswordResetTokenEntity();
+			passwordResetTokenEntity.setToken(token);
+			passwordResetTokenEntity.setUser(userEntity);
+		} else {
+			passwordResetTokenEntity.setToken(token);
+		}
+
 		passwordResetTokenRepository.save(passwordResetTokenEntity);
 
+		// Send email for password reset request link
+		// Async method
 		amazonSESService.sendPasswordResetRequest(userEntity.getEmail(), userEntity.getFirstName(), token);
 
 		return true;
