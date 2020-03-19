@@ -124,6 +124,7 @@ public class UserServiceImpl implements UserService {
 		return returnValue;
 	}
 
+	@Transactional
 	@Override
 	public boolean requestPasswordReset(String email) {
 		boolean returnValue = false;
