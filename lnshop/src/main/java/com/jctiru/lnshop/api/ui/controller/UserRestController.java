@@ -61,14 +61,17 @@ public class UserRestController {
 	}
 
 	@PostMapping(path = "/password-reset-request")
-	public OperationStatusModel requestPasswordReset(@RequestBody PasswordResetRequestModel passwordResetRequestModel) {
+	public OperationStatusModel requestPasswordReset(@RequestBody PasswordResetRequestModel passwordResetRequestModel,
+			HttpServletResponse response) {
 		OperationStatusModel returnValue = new OperationStatusModel();
-		boolean operationResult = userService.requestPasswordReset(passwordResetRequestModel.getEmail());
 		returnValue.setOperationName(RequestOperationName.REQUEST_PASSWORD_RESET.name());
-		returnValue.setOperationResult(RequestOperationResult.ERROR.name());
+		boolean operationResult = userService.requestPasswordReset(passwordResetRequestModel.getEmail());
 
 		if (operationResult) {
 			returnValue.setOperationResult(RequestOperationResult.SUCCESS.name());
+		} else {
+			returnValue.setOperationResult(RequestOperationResult.ERROR.name());
+			response.setStatus(HttpStatus.SC_UNPROCESSABLE_ENTITY);
 		}
 
 		return returnValue;
