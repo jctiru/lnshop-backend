@@ -127,11 +127,10 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	@Override
 	public boolean requestPasswordReset(String email) {
-		boolean returnValue = false;
 		UserEntity userEntity = userRepository.findUserByEmail(email);
 
 		if (userEntity == null) {
-			return returnValue;
+			return false;
 		}
 
 		String token = Utils.generatePasswordResetToken(userEntity.getUserId());
@@ -143,7 +142,7 @@ public class UserServiceImpl implements UserService {
 
 		amazonSESService.sendPasswordResetRequest(userEntity.getEmail(), userEntity.getFirstName(), token);
 
-		return returnValue;
+		return true;
 	}
 
 	@Override
