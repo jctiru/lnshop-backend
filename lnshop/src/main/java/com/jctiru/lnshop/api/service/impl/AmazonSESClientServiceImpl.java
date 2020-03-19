@@ -81,4 +81,34 @@ public class AmazonSESClientServiceImpl implements AmazonSESClientService {
 		amazonSES.sendEmail(request);
 	}
 
+	@Async
+	@Override
+	public void sendPasswordResetRequest(String destinationEmail, String firstName, String passwordResetToken) {
+		// Set sending email
+		String source = AmazonSESFrom.LNSHOP.getFrom();
+
+		// Set recipient address
+		Destination destination = new Destination().withToAddresses(destinationEmail);
+
+		// Create subject and body of message
+		Content subject = new Content().withCharset("UTF-8").withData(EmailTemplates.getPasswordResetRequestSubject());
+		List<String> htmlAndTextBody = EmailTemplates.getPasswordResetRequestHtmlAndTextBody(firstName,
+				passwordResetToken);
+		Content htmlBody = new Content().withCharset("UTF-8").withData(htmlAndTextBody.get(0));
+		Content textBody = new Content().withCharset("UTF-8").withData(htmlAndTextBody.get(1));
+		Body body = new Body().withHtml(htmlBody).withText(textBody);
+
+		// Create message with specified subject and body
+		Message message = new Message().withSubject(subject).withBody(body);
+
+		// Assemble email
+		SendEmailRequest request = new SendEmailRequest()
+				.withSource(source)
+				.withDestination(destination)
+				.withMessage(message);
+
+		// Send the email
+		amazonSES.sendEmail(request);
+	}
+
 }

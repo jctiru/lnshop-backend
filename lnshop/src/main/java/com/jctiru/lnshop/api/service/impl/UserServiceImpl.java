@@ -18,8 +18,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.jctiru.lnshop.api.exception.RecordAlreadyExistsException;
+import com.jctiru.lnshop.api.io.entity.PasswordResetTokenEntity;
 import com.jctiru.lnshop.api.io.entity.RoleEntity;
 import com.jctiru.lnshop.api.io.entity.UserEntity;
+import com.jctiru.lnshop.api.io.repository.PasswordResetTokenRepository;
 import com.jctiru.lnshop.api.io.repository.RoleRepository;
 import com.jctiru.lnshop.api.io.repository.UserRepository;
 import com.jctiru.lnshop.api.service.AmazonSESClientService;
@@ -35,6 +37,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	RoleRepository roleRepository;
+
+	@Autowired
+	PasswordResetTokenRepository passwordResetTokenRepository;
 
 	@Autowired
 	AmazonSESClientService amazonSESService;
@@ -115,6 +120,27 @@ public class UserServiceImpl implements UserService {
 				returnValue = true;
 			}
 		}
+
+		return returnValue;
+	}
+
+	@Override
+	public boolean requestPasswordReset(String email) {
+		boolean returnValue = false;
+		UserEntity userEntity = userRepository.findUserByEmail(email);
+
+		if (userEntity == null) {
+			return returnValue;
+		}
+
+		String token = Utils.generatePasswordResetToken(userEntity.getUserId());
+
+		PasswordResetTokenEntity passwordResetTokenEntity = new PasswordResetTokenEntity();
+		passwordResetTokenEntity.setToken(token);
+		passwordResetTokenEntity.setUser(userEntity);
+		passwordResetTokenRepository.save(passwordResetTokenEntity);
+
+		amazonSESService.sendPasswordResetRequest(userEntity.getEmail(), userEntity.getFirstName(), token);
 
 		return returnValue;
 	}
