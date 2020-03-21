@@ -9,6 +9,7 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +24,7 @@ public class LightNovelDetailsRequestModel {
 	@NotBlank(message = "Description must not be empty")
 	private String description;
 
-	@NotNull(message = "Please put at least 1 genre")
+	@NotEmpty(message = "Please put at least 1 genre")
 	private List<String> genresIdList;
 
 	@DecimalMin(value = "0.00", inclusive = false, message = "Price must be greater than $0.00")
