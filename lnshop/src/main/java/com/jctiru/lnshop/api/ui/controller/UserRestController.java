@@ -21,6 +21,7 @@ import com.jctiru.lnshop.api.service.UserService;
 import com.jctiru.lnshop.api.shared.RequestOperationName;
 import com.jctiru.lnshop.api.shared.RequestOperationResult;
 import com.jctiru.lnshop.api.shared.dto.UserDto;
+import com.jctiru.lnshop.api.ui.model.request.PasswordResetModel;
 import com.jctiru.lnshop.api.ui.model.request.PasswordResetRequestModel;
 import com.jctiru.lnshop.api.ui.model.request.UserDetailsRequestModel;
 import com.jctiru.lnshop.api.ui.model.response.OperationStatusModel;
@@ -61,11 +62,30 @@ public class UserRestController {
 	}
 
 	@PostMapping(path = "/password-reset-request")
-	public OperationStatusModel requestPasswordReset(@RequestBody PasswordResetRequestModel passwordResetRequestModel,
+	public OperationStatusModel requestPasswordReset(
+			@Valid @RequestBody PasswordResetRequestModel passwordResetRequestModel,
 			HttpServletResponse response) {
 		OperationStatusModel returnValue = new OperationStatusModel();
 		returnValue.setOperationName(RequestOperationName.REQUEST_PASSWORD_RESET.name());
 		boolean operationResult = userService.requestPasswordReset(passwordResetRequestModel.getEmail());
+
+		if (operationResult) {
+			returnValue.setOperationResult(RequestOperationResult.SUCCESS.name());
+		} else {
+			returnValue.setOperationResult(RequestOperationResult.ERROR.name());
+			response.setStatus(HttpStatus.SC_UNPROCESSABLE_ENTITY);
+		}
+
+		return returnValue;
+	}
+
+	@PostMapping(path = "/password-reset")
+	public OperationStatusModel resetPassword(@Valid @RequestBody PasswordResetModel passwordResetModel,
+			HttpServletResponse response) {
+		OperationStatusModel returnValue = new OperationStatusModel();
+		returnValue.setOperationName(RequestOperationName.RESET_PASSWORD.name());
+		boolean operationResult = userService.resetPassword(passwordResetModel.getToken(),
+				passwordResetModel.getPassword());
 
 		if (operationResult) {
 			returnValue.setOperationResult(RequestOperationResult.SUCCESS.name());

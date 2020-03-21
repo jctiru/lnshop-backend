@@ -8,4 +8,6 @@ public interface PasswordResetTokenRepository extends CrudRepository<PasswordRes
 
 	PasswordResetTokenEntity findPasswordResetTokenByUser_Email(String email);
 
+	PasswordResetTokenEntity findPasswordResetTokenByToken(String token);
+
 }
