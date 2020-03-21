@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 
 public class OrderRequestModel {
 
-	@NotEmpty(message = "Stripe token id must not be empty")
+	@NotBlank(message = "Stripe token id must not be empty")
 	private String stripeTokenId;
 
 	@NotEmpty(message = "Cart must not be empty")
