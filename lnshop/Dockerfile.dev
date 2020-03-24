@@ -1,0 +1,13 @@
+FROM adoptopenjdk/openjdk11:alpine-jre
+ARG JAR_FILE=target/lnshop-0.0.1-SNAPSHOT.jar
+WORKDIR /opt/app
+COPY ${JAR_FILE} app.jar
+ENTRYPOINT [ "java", "-jar", "app.jar", "--spring.profiles.active=dev", "--spring.datasource.url=jdbc:mysql://host.docker.internal:3306/lnshop?useSSL=false&serverTimezone=UTC&useUnicode=yes&characterEncoding=UTF-8" ]
+EXPOSE 8080
+
+# Prepackage jar first / Test fails on prepackaging due to missing environment variables
+# ./mvnw clean package -Dmaven.test.skip=true
+# Docker Build
+# docker build -t jctiru/lnshop-backend -f Dockerfile.dev .
+# Docker Run
+# docker run --name lnshop-backend --memory 256m -p 8080:8080 -e LNSHOP_AWS_ACCESS_KEY_ID=val -e LNSHOP_AWS_SECRET_ACCESS_KEY=val -e LNSHOP_AWS_REGION=val -e LNSHOP_AWS_S3_BUCKET=val -e LNSHOP_STRIPE_API_SECRET_KEY=val jctiru/lnshop-backend
