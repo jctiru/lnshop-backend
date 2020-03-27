@@ -5,9 +5,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.jctiru.lnshop.api.io.entity.Card;
-import com.jctiru.lnshop.api.io.entity.OrderItemEntity;
-import com.jctiru.lnshop.api.io.entity.ShippingAddressEntity;
-import com.jctiru.lnshop.api.io.entity.UserEntity;
 
 public class OrderDto {
 
@@ -15,10 +12,10 @@ public class OrderDto {
 	private String orderId;
 	private String stripeTokenId;
 	private String stripeChargeId;
-	private UserEntity user;
+	private UserDto user;
 	private Card card;
-	private ShippingAddressEntity shippingAddress;
-	private List<OrderItemEntity> orderItems;
+	private ShippingAddressDto shippingAddress;
+	private List<OrderItemDto> orderItems;
 	private BigDecimal total;
 	private LocalDateTime createDateTime;
 	private LocalDateTime updateDateTime;
@@ -55,11 +52,11 @@ public class OrderDto {
 		this.stripeChargeId = stripeChargeId;
 	}
 
-	public UserEntity getUser() {
+	public UserDto getUser() {
 		return user;
 	}
 
-	public void setUser(UserEntity user) {
+	public void setUser(UserDto user) {
 		this.user = user;
 	}
 
@@ -71,19 +68,19 @@ public class OrderDto {
 		this.card = card;
 	}
 
-	public ShippingAddressEntity getShippingAddress() {
+	public ShippingAddressDto getShippingAddress() {
 		return shippingAddress;
 	}
 
-	public void setShippingAddress(ShippingAddressEntity shippingAddress) {
+	public void setShippingAddress(ShippingAddressDto shippingAddress) {
 		this.shippingAddress = shippingAddress;
 	}
 
-	public List<OrderItemEntity> getOrderItems() {
+	public List<OrderItemDto> getOrderItems() {
 		return orderItems;
 	}
 
-	public void setOrderItems(List<OrderItemEntity> orderItems) {
+	public void setOrderItems(List<OrderItemDto> orderItems) {
 		this.orderItems = orderItems;
 	}
 

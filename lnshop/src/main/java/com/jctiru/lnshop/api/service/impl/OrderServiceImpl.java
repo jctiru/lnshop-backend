@@ -130,11 +130,8 @@ public class OrderServiceImpl implements OrderService {
 		List<OrderEntity> orders = ordersPage.getContent();
 		List<OrderDto> ordersDto = new ArrayList<>();
 
-		modelMapper.typeMap(OrderEntity.class, OrderDto.class)
-				.addMappings(mapper -> mapper.skip(OrderDto::setOrderItems));
-
 		for (OrderEntity orderEntity : orders) {
-			OrderDto orderDto = modelMapper.map(orderEntity, OrderDto.class);
+			OrderDto orderDto = modelMapper.map(orderEntity, OrderDto.class, "OrderOverviewTypeMap");
 			ordersDto.add(orderDto);
 		}
 
@@ -145,6 +142,7 @@ public class OrderServiceImpl implements OrderService {
 		return returnValue;
 	}
 
+	@Transactional
 	@Override
 	public OrderPageDto getOrders(int page, int limit, String email) {
 		if (page > 0) {
@@ -156,11 +154,8 @@ public class OrderServiceImpl implements OrderService {
 		List<OrderEntity> orders = ordersPage.getContent();
 		List<OrderDto> ordersDto = new ArrayList<>();
 
-		modelMapper.typeMap(OrderEntity.class, OrderDto.class)
-				.addMappings(mapper -> mapper.skip(OrderDto::setOrderItems));
-
 		for (OrderEntity orderEntity : orders) {
-			OrderDto orderDto = modelMapper.map(orderEntity, OrderDto.class);
+			OrderDto orderDto = modelMapper.map(orderEntity, OrderDto.class, "OrderOverviewTypeMap");
 			ordersDto.add(orderDto);
 		}
 

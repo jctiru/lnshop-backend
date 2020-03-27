@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.jctiru.lnshop.api.AppPropertiesFile;
-import com.jctiru.lnshop.api.io.entity.OrderItemEntity;
 import com.jctiru.lnshop.api.shared.dto.OrderDto;
+import com.jctiru.lnshop.api.shared.dto.OrderItemDto;
 
 @Component
 public class EmailTemplates {
@@ -72,7 +72,7 @@ public class EmailTemplates {
 		StringBuilder orderItemsHtmlSnippet = new StringBuilder();
 		StringBuilder orderItemsTextSnippet = new StringBuilder();
 
-		for (OrderItemEntity orderItem : order.getOrderItems()) {
+		for (OrderItemDto orderItem : order.getOrderItems()) {
 			StringBuilder orderItemHtmlSnippet = new StringBuilder(ORDER_ITEM_HTML_SNIPPET);
 			StringBuilder orderItemTextSnippet = new StringBuilder(ORDER_ITEM_TEXT_SNIPPET);
 
