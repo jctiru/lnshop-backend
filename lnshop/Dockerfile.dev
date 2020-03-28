@@ -10,4 +10,4 @@ EXPOSE 8080
 # Docker Build
 # docker build -t jctiru/lnshop-backend -f Dockerfile.dev .
 # Docker Run
-# docker run --name lnshop-backend --memory 256m -p 8080:8080 -e LNSHOP_AWS_ACCESS_KEY_ID=val -e LNSHOP_AWS_SECRET_ACCESS_KEY=val -e LNSHOP_AWS_REGION=val -e LNSHOP_AWS_S3_BUCKET=val -e LNSHOP_STRIPE_API_SECRET_KEY=val jctiru/lnshop-backend
+# docker run --name lnshop-backend --memory 256m -p 8080:8080 -e LNSHOP_AWS_ACCESS_KEY_ID=val -e LNSHOP_AWS_SECRET_ACCESS_KEY=val -e LNSHOP_AWS_REGION=val -e LNSHOP_AWS_S3_BUCKET=val -e LNSHOP_AWS_CLOUDFRONT_CNAME=val -e LNSHOP_STRIPE_API_SECRET_KEY=val jctiru/lnshop-backend
