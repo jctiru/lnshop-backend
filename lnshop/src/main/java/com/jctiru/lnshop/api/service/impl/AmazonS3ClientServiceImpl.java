@@ -27,6 +27,9 @@ public class AmazonS3ClientServiceImpl implements AmazonS3ClientService {
 	@Value("${app.aws.s3.bucket}")
 	String awsS3Bucket;
 
+	@Value("${app.aws.cloudfront.cname}")
+	String awsCloudfrontCname;
+
 	@Override
 	public String uploadFileToS3Bucket(MultipartFile multipartFile, String stringPrefix) {
 		String fileName = stringPrefix + multipartFile.getOriginalFilename();
@@ -70,6 +73,11 @@ public class AmazonS3ClientServiceImpl implements AmazonS3ClientService {
 	@Override
 	public String getFileNameFromImageUrl(String imageUrl) {
 		return imageUrl.replace("https://" + awsS3Bucket + ".s3.amazonaws.com/", "");
+	}
+
+	@Override
+	public String convertS3UrlToCloudfrontCnameUrl(String imageUrl) {
+		return "https://" + awsCloudfrontCname + "/" + this.getFileNameFromImageUrl(imageUrl);
 	}
 
 }

@@ -10,4 +10,6 @@ public interface AmazonS3ClientService {
 
 	String getFileNameFromImageUrl(String imageUrl);
 
+	String convertS3UrlToCloudfrontCnameUrl(String imageUrl);
+
 }
