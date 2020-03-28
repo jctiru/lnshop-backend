@@ -1,4 +1,7 @@
-language: generic
+language: java
+
+jdk:
+  - openjdk11
 
 services:
   - docker
@@ -6,7 +9,8 @@ services:
 install: skip
 
 script:
-  - ./mvnw clean package -Dmaven.test.skip=true
+  - cd lnshop
+  - bash ./mvnw clean package -Dmaven.test.skip=true
   - docker build -t jctiru/lnshop-backend .
 
 after_success:
@@ -16,3 +20,7 @@ after_success:
 branches:
   only:
     - master
+
+cache:
+  directories:
+    - $HOME/.m2
