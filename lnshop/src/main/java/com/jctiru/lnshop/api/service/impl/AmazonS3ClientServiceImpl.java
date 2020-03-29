@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,9 +15,13 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.iterable.S3Objects;
+import com.amazonaws.services.s3.model.AccessControlList;
+import com.amazonaws.services.s3.model.CanonicalGrantee;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.Permission;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.jctiru.lnshop.api.service.AmazonS3ClientService;
 
 @Service
@@ -30,6 +36,8 @@ public class AmazonS3ClientServiceImpl implements AmazonS3ClientService {
 	@Value("${app.aws.cloudfront.cname}")
 	String awsCloudfrontCname;
 
+	Logger logger = LoggerFactory.getLogger(AmazonS3ClientServiceImpl.class);
+
 	@Override
 	public String uploadFileToS3Bucket(MultipartFile multipartFile, String stringPrefix) {
 		String fileName = stringPrefix + multipartFile.getOriginalFilename();
@@ -39,10 +47,7 @@ public class AmazonS3ClientServiceImpl implements AmazonS3ClientService {
 
 		try (FileOutputStream fos = new FileOutputStream(file)) {
 			fos.write(multipartFile.getBytes());
-
 			PutObjectRequest putObjectRequest = new PutObjectRequest(awsS3Bucket, fileName, file);
-			putObjectRequest.withCannedAcl(CannedAccessControlList.PublicRead);
-
 			amazonS3.putObject(putObjectRequest);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -78,6 +83,21 @@ public class AmazonS3ClientServiceImpl implements AmazonS3ClientService {
 	@Override
 	public String convertS3UrlToCloudfrontCnameUrl(String imageUrl) {
 		return "https://" + awsCloudfrontCname + "/" + this.getFileNameFromImageUrl(imageUrl);
+	}
+
+	@Override
+	public void privatizeS3Objects() {
+		S3Objects.inBucket(amazonS3, awsS3Bucket).forEach((S3ObjectSummary objectSummary) -> {
+			logger.info("Modifying ACL of {}...", objectSummary.getKey());
+
+			AccessControlList acl = amazonS3.getObjectAcl(awsS3Bucket, objectSummary.getKey());
+			acl.getGrantsAsList().clear();
+			acl.grantPermission(new CanonicalGrantee(acl.getOwner().getId()), Permission.FullControl);
+			amazonS3.setObjectAcl(awsS3Bucket, objectSummary.getKey(), acl);
+
+			logger.info("Successfully modified {}...", objectSummary.getKey());
+		});
+
 	}
 
 }

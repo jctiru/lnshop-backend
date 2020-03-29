@@ -12,4 +12,6 @@ public interface AmazonS3ClientService {
 
 	String convertS3UrlToCloudfrontCnameUrl(String imageUrl);
 
+	void privatizeS3Objects();
+
 }
