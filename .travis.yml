@@ -16,8 +16,9 @@ script:
 after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   - docker push jctiru/lnshop-backend
+  - PROJECT_NAME=${TRAVIS_REPO_SLUG#*/}
   - COMMIT_TIME=$(git show -s --format=%ct $TRAVIS_COMMIT)
-  - curl --silent --output /dev/null  --request POST --form token=$GITLAB_TRIGGER_TOKEN --form ref=$REF_NAME --form "variables[TRAVIS_API_TRIGGER]=true" --form "variables[TRAVIS_REPO_SLUG]=$TRAVIS_REPO_SLUG" --form "variables[CI_COMMIT_SHA]=$TRAVIS_COMMIT" --form "variables[CI_COMMIT_MESSAGE]=$TRAVIS_COMMIT_MESSAGE" --form "variables[COMMIT_TIME]=$COMMIT_TIME" https://gitlab.com/api/v4/projects/$GITLAB_PROJECT_ID/trigger/pipeline
+  - curl --silent --output /dev/null  --request POST --form token=$GITLAB_TRIGGER_TOKEN --form ref=$REF_NAME --form "variables[TRAVIS_API_TRIGGER]=true" --form "variables[CI_PROJECT_NAME]=$PROJECT_NAME" --form "variables[CI_COMMIT_SHA]=$TRAVIS_COMMIT" --form "variables[CI_COMMIT_MESSAGE]=$TRAVIS_COMMIT_MESSAGE" --form "variables[COMMIT_TIME]=$COMMIT_TIME" https://gitlab.com/api/v4/projects/$GITLAB_PROJECT_ID/trigger/pipeline
 
 branches:
   only:
