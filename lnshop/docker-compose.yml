@@ -1,0 +1,24 @@
+version: "3.5"
+
+services: 
+  lnshop-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports: 
+      - "8080:8080"
+    volumes:
+      - openj9-shareclasses:/opt/app/jvm/openj9/shareclasses
+    env_file: 
+      - ./docker-compose-secrets/secrets.env
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 128M
+
+
+volumes:
+  openj9-shareclasses:
+
+# docker-compose --compatibility up (--build)
