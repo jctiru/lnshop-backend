@@ -3,7 +3,6 @@ package com.jctiru.lnshop.api;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
-import org.modelmapper.spi.MappingContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,12 +39,8 @@ public class BeanDefinitions {
 
 		// Convert S3 Url to Cloudfront CNAME url when mapping LightNovelEntity to
 		// LightNovelDto
-		Converter<String, String> convertS3UrlToCloudfrontCnameUrl = new Converter<String, String>() {
-			public String convert(MappingContext<String, String> context) {
-				return context.getSource() == null ? null
-						: amazonS3ClientService.convertS3UrlToCloudfrontCnameUrl(context.getSource());
-			}
-		};
+		Converter<String, String> convertS3UrlToCloudfrontCnameUrl = context -> context.getSource() == null ? null
+				: amazonS3ClientService.convertS3UrlToCloudfrontCnameUrl(context.getSource());
 		modelMapper.typeMap(LightNovelEntity.class, LightNovelDto.class)
 				.addMappings(mapper -> mapper.using(convertS3UrlToCloudfrontCnameUrl).map(LightNovelEntity::getImageUrl,
 						LightNovelDto::setImageUrl));
