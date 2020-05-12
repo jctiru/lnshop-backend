@@ -3,11 +3,13 @@ package com.jctiru.lnshop.api.service.impl;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,8 +40,9 @@ public class AmazonS3ClientServiceImpl implements AmazonS3ClientService {
 
 	Logger logger = LoggerFactory.getLogger(AmazonS3ClientServiceImpl.class);
 
+	@Async
 	@Override
-	public String uploadFileToS3Bucket(MultipartFile multipartFile, String stringPrefix) {
+	public CompletableFuture<String> uploadFileToS3Bucket(MultipartFile multipartFile, String stringPrefix) {
 		String fileName = stringPrefix + multipartFile.getOriginalFilename();
 
 		// Create temporary file
@@ -57,9 +60,10 @@ public class AmazonS3ClientServiceImpl implements AmazonS3ClientService {
 			file.delete();
 		}
 
-		return ((AmazonS3Client) amazonS3).getResourceUrl(awsS3Bucket, fileName);
+		return CompletableFuture.completedFuture(((AmazonS3Client) amazonS3).getResourceUrl(awsS3Bucket, fileName));
 	}
 
+	@Async
 	@Override
 	public void deleteFileFromS3Bucket(String fileName) {
 		try {

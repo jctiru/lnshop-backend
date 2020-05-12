@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import javax.transaction.Transactional;
 
@@ -67,8 +69,14 @@ public class LightNovelServiceImpl implements LightNovelService {
 		lightNovelEntity.setLightNovelId(publicLightNovelId);
 
 		if (lightNovel.getImage() != null) {
-			String imageUrl = amazonS3ClientService.uploadFileToS3Bucket(lightNovel.getImage(), publicLightNovelId);
-			lightNovelEntity.setImageUrl(imageUrl);
+			CompletableFuture<String> imageUrl = amazonS3ClientService.uploadFileToS3Bucket(lightNovel.getImage(),
+					publicLightNovelId);
+			try {
+				lightNovelEntity.setImageUrl(imageUrl.get());
+			} catch (InterruptedException | ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		LightNovelEntity storedLightNovelDetails = lightNovelRepository.save(lightNovelEntity);
@@ -109,9 +117,14 @@ public class LightNovelServiceImpl implements LightNovelService {
 				amazonS3ClientService.deleteFileFromS3Bucket(fileName);
 			}
 
-			String imageUrl = amazonS3ClientService.uploadFileToS3Bucket(lightNovel.getImage(),
+			CompletableFuture<String> imageUrl = amazonS3ClientService.uploadFileToS3Bucket(lightNovel.getImage(),
 					lightNovelEntity.getLightNovelId());
-			lightNovelEntity.setImageUrl(imageUrl);
+			try {
+				lightNovelEntity.setImageUrl(imageUrl.get());
+			} catch (InterruptedException | ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		LightNovelEntity updatedLightNovel = lightNovelRepository.save(lightNovelEntity);
