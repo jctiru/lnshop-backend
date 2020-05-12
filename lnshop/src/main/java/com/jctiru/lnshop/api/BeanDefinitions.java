@@ -1,11 +1,14 @@
 package com.jctiru.lnshop.api;
 
+import java.util.concurrent.Executor;
+
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
@@ -46,6 +49,14 @@ public class BeanDefinitions {
 						LightNovelDto::setImageUrl));
 
 		return modelMapper;
+	}
+
+	@Bean
+	public Executor taskExecutor() {
+		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+		executor.setAllowCoreThreadTimeOut(true);
+
+		return executor;
 	}
 
 	@Bean
