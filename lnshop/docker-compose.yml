@@ -14,9 +14,9 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "1"
-          memory: 128M
-
+          cpus: "2"
+        reservations:
+          memory: 150M
 
 volumes:
   openj9-shareclasses:
