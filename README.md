@@ -96,10 +96,10 @@ Frontend repo goes through TravisCI pipeline which builds the assets and uploads
 
 - Improve frontend design a bit
 - Improve mobile design
-- Scroll up on page change
+- ~~Scroll up on page change~~
 - Add visual feedback on add-to-cart button click
-- Add favicon
-- Change page title
+- ~~Add favicon~~
+- ~~Change page title~~
 - Etc...
 
 ### Backend Specific
