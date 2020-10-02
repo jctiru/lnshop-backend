@@ -19,6 +19,10 @@ Frontend repo goes through TravisCI pipeline which builds the assets and uploads
 
 ![Flow.jpg](Flow.jpg)
 
+## Inside Elastic Beanstalk
+
+![ElasticBeanstalk.jpg](ElasticBeanstalk.jpg)
+
 ## React SPA Frontend on <https://github.com/jctiru/lnshop-frontend>
 
 ## Features
