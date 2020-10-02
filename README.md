@@ -11,9 +11,9 @@
 
 A Light Novel eCommerce website. Java using Spring Boot for backend and React SPA for frontend.
 
-Backend hosted on AWS Elastic Beanstalk with multi-docker config. EC2 instance on public subnet while AWS RDS on private subnet. Frontend assets on AWS S3. Image uploads are on S3 too. Both S3 buckets are behind AWS CloudFront CDN and are not directly accessible except only through AWS CloudFront by using Origin Access Identity. AWS Cloudfront SSL/TLS certificates for custom domain are provided by AWS ACM. Outbound emails are handled by AWS SES while inbound emails are handled by Yandex which provides free email hosting with custom domain. Stripe is used for payment processing. Domain registration and DNS service handled by AWS Route53.
+Backend hosted on AWS Elastic Beanstalk with the multi-docker config. EC2 instance on public subnet while AWS RDS on a private subnet. Frontend assets on AWS S3. Image uploads are on S3 too. Both S3 buckets are behind AWS CloudFront CDN and are not directly accessible except only through AWS CloudFront by using Origin Access Identity. AWS Cloudfront SSL/TLS certificates for the custom domain are provided by AWS ACM. Outbound emails are handled by AWS SES while inbound emails are handled by Yandex which provides free email hosting with a custom domain. Stripe is used for payment processing. Domain registration and DNS service handled by AWS Route53.
 
-Frontend repo goes through TravisCI pipeline which builds the assets and uploads to S3 bucket. Backend repo also goes through TravisCI pipeline which builds and uploads the docker image to Docker Hub, then triggers a central GitlabCI pipeline which handles deployment to Elastic Beanstalk for all projects (includes other projects which are also hosted in the same single EC2 instance). Traefik is used as reverse proxy for multiple containers and to automate Let's Encrypt SSL/TLS certificate generation/management.
+The frontend repo goes through the TravisCI pipeline which builds the assets and uploads to the S3 bucket. The backend repo also goes through the TravisCI pipeline which builds and uploads the docker image to Docker Hub, then triggers a central GitlabCI pipeline which handles deployment to Elastic Beanstalk for all projects (includes other projects which are also hosted in the same single EC2 instance). Traefik is used as a reverse proxy for multiple containers and to automate Let's Encrypt SSL/TLS certificate generation/management.
 
 ## Project Flow Diagram
 
@@ -30,11 +30,11 @@ Frontend repo goes through TravisCI pipeline which builds the assets and uploads
 - Account creation with email confirmation for activation
 - Forgotten password reset request via email
 - CRUD for products by admin
-- Search, pagination and multi-genre query for products
+- Search, pagination, and multi-genre query for products
 - Shopping cart system
 - Card payment via Stripe
 - Order confirmation with email notification
-- View orders on user profile and all orders on admin side
+- View orders on user profile and all orders on the admin side
 
 ## Overall Project Tech Stack
 
@@ -76,7 +76,7 @@ Frontend repo goes through TravisCI pipeline which builds the assets and uploads
 
 - [OpenJ9](https://www.eclipse.org/openj9/) - JVM for OpenJDK for low memory footprint, used for building docker image of backend
 - [Docker](https://www.docker.com/) - Containerization
-- [TravisCI](https://travis-ci.com/) - CI/CD for building the frontend assets and deploying to S3; CI/CD for building docker image of backend and pushing to dockerhub
+- [TravisCI](https://travis-ci.com/) - CI/CD for building the frontend assets and deploying to S3; CI/CD for building docker image of backend and pushing to docker hub
 - [GitlabCI](https://about.gitlab.com/stages-devops-lifecycle/continuous-integration/) - CI/CD for aggregating projects for deployment to AWS
 - [git-secret](https://git-secret.io/) - Encrypt git files at rest and decrypt during CI/CD on Gitlab private repo that deploys to AWS
 - [Traefik](https://containo.us/traefik/) - Reverse proxy and automatic SSL/TLS management
@@ -98,10 +98,10 @@ Frontend repo goes through TravisCI pipeline which builds the assets and uploads
 
 ### Frontend Specific
 
-- Improve frontend design a bit
+- Improve front-end design a bit
 - Improve mobile design
 - ~~Scroll up on page change~~
-- Add visual feedback on add-to-cart button click
+- Add visual feedback on the add-to-cart button click
 - ~~Add favicon~~
 - ~~Change page title~~
 - Etc...
@@ -110,6 +110,6 @@ Frontend repo goes through TravisCI pipeline which builds the assets and uploads
 
 - Add swagger documentation
 - Improve error messages
-- Centralize config of modelmapper
-- Add simple response on http get on root url
+- Centralize config of model mapper
+- Add simple response on HTTP get on root URL
 - Etc...
